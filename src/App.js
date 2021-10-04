@@ -1,25 +1,35 @@
-import logo from './logo.svg';
+import React from 'react';
+import { Theme as UWPThemeProvider, getTheme } from 'react-uwp/Theme';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
+
+import ROUTES, { RenderRoutes } from './routes';
+import { Nav } from './components';
+import background from './assets/images/background.jpg';
+
 import './App.css';
+import 'react-chat-elements/dist/main.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends React.Component {
+    render() {
+        return (
+            <UWPThemeProvider
+                theme={getTheme({
+                    themeName: 'dark', // set custom theme
+                    accent: '#0078D7', // set accent color
+                    useFluentDesign: true, // sure you want use new fluent design.
+                    desktopBackgroundImage: background // set global desktop background image
+                })}
+            >
+                <div className="App">
+                    <Router>
+                        <Nav />
+                        <Container fluid="sm" className="p-0">
+                            <RenderRoutes routes={ROUTES} />
+                        </Container>
+                    </Router>
+                </div>
+            </UWPThemeProvider>
+        );
+    }
 }
-
-export default App;
