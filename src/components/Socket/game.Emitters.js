@@ -9,6 +9,10 @@ export const emit = {
         socket.emit('player-turn-pass', item);
     },
 
+    sendChatMessage: (message) => {
+        socket.emit('send-chat-message', message);
+    },
+
     closeConnection: () => {
         socket.close();
     }

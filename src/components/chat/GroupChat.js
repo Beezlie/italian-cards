@@ -2,11 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Button, MessageList } from 'react-chat-elements';
 
+import { emit } from '../Socket/game.Emitters';
 import { subscribeTo } from '../Socket/game.Subscriptions';
 
 class GroupChat extends React.Component {
     state = {
-        messages: []
+        messages: [],
+        currentMessage: '',
+        lastMessageUser: '',
     };
 
     static propTypes = {
@@ -123,7 +126,39 @@ class GroupChat extends React.Component {
             this.setState(state => ({ messages: [...state.messages, systemMsg] }));
             console.log(message);
         });
+
+        subscribeTo.updateChat((err, message) => {
+            const { lastMessageUser } = this.state;
+            let title = null;
+            if (lastMessageUser !== message.username) {
+                title = message.username;
+            }
+            const chatMsg = this.createChatMessage(title, message.text);
+            this.setState(state => ({
+                messages: [...state.messages, chatMsg],
+                lastMessageUser: message.username,
+            }));
+            console.log(message.text);
+        });
     }
+
+    createChatMessage = (title, text) => {
+        return {
+            position: 'right',
+            notch: false,
+            type: 'text',
+            title: title,
+            text: text,
+        };
+    };
+
+    handleChange = e => {
+        this.setState({ currentMessage: e.target.value });
+    };
+
+    sendMessage = () => {
+        emit.sendChatMessage(this.state.currentMessage);
+    };
 
     render() {
         const { messages } = this.state;
@@ -149,7 +184,15 @@ class GroupChat extends React.Component {
                 <Input
                     multiline
                     placeholder="Type here..."
-                    rightButtons={<Button color="white" backgroundColor="black" text="Send" />}
+                    onChange={this.handleChange}
+                    rightButtons={
+                        <Button
+                            color="white"
+                            backgroundColor="black"
+                            text="Send"
+                            onClick={this.sendMessage}
+                        />
+                    }
                 />
             </div>
         );

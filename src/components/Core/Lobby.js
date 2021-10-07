@@ -6,9 +6,7 @@ import { Col, Row } from 'react-bootstrap';
 import Button from 'react-uwp/Button';
 import Toast from 'react-uwp/Toast';
 
-import TeamPlayers from './TeamPlayers';
-import PlayerSearch from './PlayerSearch';
-import GroupChat from './GroupChat';
+import GroupChat from '../chat/GroupChat';
 import JoinedPlayers from './JoinedPlayers';
 import { emit } from '../Socket/game.Emitters';
 import TurnTimer from './TurnTimer';
@@ -22,8 +20,6 @@ class Lobby extends React.Component {
         teamPlayers: [],
         playersJoined: [],
         currentItem: undefined,
-        allCollections: {},
-        currentCollectionId: 'current-user',
         currentUsername: ''
     };
 
@@ -94,33 +90,6 @@ class Lobby extends React.Component {
         );
     };
 
-    updateCurrentItem = newPlayer => {
-        const { teamPlayers, allCollections, playersJoined } = this.state;
-        const item = {
-            id: newPlayer.objectID,
-            name: newPlayer.name,
-            position: newPlayer.positions,
-            rating: newPlayer['Overall Rating']
-        };
-        const warning = warnIfDuplicateAcrossCollections(item, allCollections, playersJoined);
-        if (warning[0]) {
-            this.setState({ warning }, () => {
-                console.log('updated warning state', this.state.warning);
-            });
-        } else {
-            // TODO: This check shouldn't be necessary, the above
-            //       check should handle all duplicate cases of all
-            //       players. (Test and remove later)
-            if (teamPlayers.every(v => v.id !== item.id)) {
-                this.setState({
-                    currentItem: item
-                });
-            } else {
-                return console.log('Player already added!');
-            }
-        }
-    };
-
     updatePlayers = playersJoined => {
         this.setState({ playersJoined });
     };
@@ -151,18 +120,10 @@ class Lobby extends React.Component {
             />
         );
     };
+
     render() {
         const { roomId, password, options } = this.props;
-        const {
-            teamPlayers,
-            playersJoined,
-            currentUsername,
-            isTurn,
-            isDraftReady,
-            allCollections,
-            currentCollectionId,
-            warning
-        } = this.state;
+        const { playersJoined, currentUsername, isTurn } = this.state;
         const { theme } = this.context;
 
         if (!roomId) {
@@ -178,16 +139,6 @@ class Lobby extends React.Component {
                         background: theme.useFluentDesign ? theme.acrylicTexture80.background : 'none'
                     }}
                 >
-                    {this.showWarning(warning)}
-                    {!isDraftReady && this.preDraft()}
-                    {isDraftReady && this.onDraft()}
-                    {isDraftReady && (
-                        <TeamPlayers
-                            allCollections={allCollections}
-                            collectionId={currentCollectionId}
-                            teamPlayers={teamPlayers}
-                        />
-                    )}
                     <JoinedPlayers
                         playersJoined={playersJoined}
                         changeCollectionTo={this.switchCollection}
@@ -199,14 +150,6 @@ class Lobby extends React.Component {
                         background: theme.useFluentDesign ? theme.acrylicTexture80.background : 'none'
                     }}
                 >
-                    <PlayerSearch
-                        updateCurrentItem={this.updateCurrentItem}
-                        isDraftReady={isDraftReady}
-                        style={{ background: theme.accentDarker2 }}
-                        hoverStyle={{
-                            background: theme.altMedium
-                        }}
-                    />
                 </Col>
                 <Col lg={3} md={6}>
                     <GroupChat setParentStates={this.setStates} />
@@ -236,22 +179,6 @@ const mapStateToProps = state => {
         password: room.password,
         options: room.options
     };
-};
-
-const warnIfDuplicateAcrossCollections = (item, collections, players) => {
-    for (const [socketId, items] of Object.entries(collections)) {
-        for (const eachItem of items) {
-            if (eachItem.id === item.id) {
-                const { username } = players.filter(player => player.id === socketId)[0];
-                return [
-                    true,
-                    'Duplicate Entry Found!',
-                    `This item is already taken by ${username}`
-                ];
-            }
-        }
-    }
-    return [false, undefined, undefined];
 };
 
 export default connect(mapStateToProps)(Lobby);

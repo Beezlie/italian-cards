@@ -49,5 +49,12 @@ export const subscribeTo = {
             console.log(message);
             cb(null, message);
         });
+    },
+
+    updateChat: cb => {
+        socket.on('update-chat', message => {
+            console.log(message);
+            cb(null, message);
+        });
     }
 };
