@@ -1,0 +1,36 @@
+.group-chat {
+    color: #88898a;
+    font-size: 0.5em;
+    height: 40vh;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.chat-message-list {
+    height: 100px;
+
+    .chat-message-title {
+        font-size: x-small;
+        color: white;
+        background-color: none;
+    }
+
+    .chat-message {
+        min-width: 10rem;
+        font-size: medium;
+        color: white;
+
+        .user-chat-message {
+            background-color: #7769a0;
+        }
+
+        .player-chat-message {
+            background-color: #8B9DC3;
+        }
+    }
+}
+
+.chat-message-input {
+    min-width: inherit;
+}
+

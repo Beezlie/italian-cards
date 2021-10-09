@@ -122,7 +122,7 @@ class Lobby extends React.Component {
     };
 
     render() {
-        const { roomId, password, options } = this.props;
+        const { username, roomId, password, options } = this.props;
         const { playersJoined, currentUsername, isTurn } = this.state;
         const { theme } = this.context;
 
@@ -152,7 +152,10 @@ class Lobby extends React.Component {
                 >
                 </Col>
                 <Col lg={3} md={6}>
-                    <GroupChat setParentStates={this.setStates} />
+                    <GroupChat
+                        username={username}
+                        setParentStates={this.setStates}
+                    />
                     <br />
                     <h4>
                         PASSWORD - <b>{password || 'none'}</b>{' '}
@@ -161,7 +164,7 @@ class Lobby extends React.Component {
                     {isTurn && (
                         <TurnTimer
                             isTurn={isTurn}
-                            currentPlayer={currentUsername}
+                            currentUserName={currentUsername}
                             duration={options.maxTimerLimit || 10}
                         />
                     )}

@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Button, MessageList } from 'react-chat-elements';
 
-import { emit } from '../Socket/game.Emitters';
+import './ChatStyles.scss'
+import ChatInput from './ChatInput';
+import ChatMessageList from './ChatMessageList';
 import { subscribeTo } from '../Socket/game.Subscriptions';
 
 class GroupChat extends React.Component {
     state = {
         messages: [],
-        currentMessage: '',
-        lastMessageUser: '',
     };
 
     static propTypes = {
+        username: PropTypes.string.isRequired,
         setParentStates: PropTypes.func.isRequired
     };
 
@@ -127,73 +127,29 @@ class GroupChat extends React.Component {
             console.log(message);
         });
 
+        //TODO - maybe move this to MessageList component
         subscribeTo.updateChat((err, message) => {
-            const { lastMessageUser } = this.state;
-            let title = null;
-            if (lastMessageUser !== message.username) {
-                title = message.username;
-            }
-            const chatMsg = this.createChatMessage(title, message.text);
             this.setState(state => ({
-                messages: [...state.messages, chatMsg],
-                lastMessageUser: message.username,
+                messages: [...state.messages, message],
             }));
             console.log(message.text);
         });
     }
 
-    createChatMessage = (title, text) => {
-        return {
-            position: 'right',
-            notch: false,
-            type: 'text',
-            title: title,
-            text: text,
-        };
-    };
-
-    handleChange = e => {
-        this.setState({ currentMessage: e.target.value });
-    };
-
-    sendMessage = () => {
-        emit.sendChatMessage(this.state.currentMessage);
-    };
-
+    //TODO - maybe get currentUserName from redux store instead of passing as prop? idk
     render() {
         const { messages } = this.state;
+        const { username } = this.props;
 
         return (
             <div>
-                <div
-                    style={{
-                        color: '#88898a',
-                        fontSize: '0.5em',
-                        height: '40vh',
-                        overflowY: 'scroll'
-                    }}
-                >
-                    <MessageList
-                        className="group-chat"
-                        lockable={false}
-                        toBottomHeight="100%"
-                        dataSource={messages}
-                        style={{}}
+                <div className="group-chat">
+                    <ChatMessageList
+                        username={username}
+                        messages={messages}
                     />
                 </div>
-                <Input
-                    multiline
-                    placeholder="Type here..."
-                    onChange={this.handleChange}
-                    rightButtons={
-                        <Button
-                            color="white"
-                            backgroundColor="black"
-                            text="Send"
-                            onClick={this.sendMessage}
-                        />
-                    }
-                />
+                <ChatInput/>
             </div>
         );
     }
