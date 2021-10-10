@@ -38,7 +38,7 @@ class Nav extends React.Component {
         return (
             <Navbar variant="dark" style={{ background: theme.useFluentDesign ? theme.acrylicTexture80.background : 'none' }}>
                 <Navbar.Brand href="/">
-                    <img src={logo} width="30" height="30" className="d-inline-block align-top" alt="logo" /> Fifa.io
+                    <img src={logo} width="30" height="30" className="d-inline-block align-top" alt="logo" /> Scopa!
                 </Navbar.Brand>
                 <this.loginStatus />
             </Navbar>

@@ -10,9 +10,9 @@ import Welcome from './Room.Welcome';
 import JoinRoom from './Room.Join';
 import CreateRoom from './Room.Create';
 import { SocketInit } from '../Socket/Socket';
-import { initListeners } from '../Socket/init.Listeners';
+import { initListeners } from '../Socket/InitListeners';
 import { addRoomId, addPassword, addOptions } from '../../store/actions/RoomActions';
-import { emit } from '../Socket/game.Emitters';
+import { emit } from '../Socket/GameEmitters';
 
 export let socket = undefined;
 

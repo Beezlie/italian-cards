@@ -12,10 +12,9 @@ const ChatMessageList = (props) => {
         return keys.map((key, index) => {
             const message = messages[key];
             const lastMessageKey = index === 0 ? null : keys[index - 1];
-            const userTypeClass = username === message.username ? "user-message" : "player-message";
 
             return (
-                <div className={`message-row ${userTypeClass}`} key={`msg_${index}`}>
+                <div className={`message-row ${message.classType}`} key={`msg_${index}`}>
                     <ChatMessage
                         username={username}
                         message={message}

@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import './ChatStyles.scss'
 import ChatInput from './ChatInput';
 import ChatMessageList from './ChatMessageList';
-import { subscribeTo } from '../Socket/game.Subscriptions';
+import { subscribeTo } from '../Socket/GameSubscriptions';
 
-class GroupChat extends React.Component {
+class ChatContainer extends React.Component {
     state = {
         messages: [],
     };
@@ -127,16 +127,35 @@ class GroupChat extends React.Component {
             console.log(message);
         });
 
-        //TODO - maybe move this to MessageList component
         subscribeTo.updateChat((err, message) => {
+            const { username } = this.props;
+            const chatMessage = {
+                classType: message.username === username ? "user-message" : "player-message",
+                text: message.text,
+                username: message.username,
+            };
+
             this.setState(state => ({
-                messages: [...state.messages, message],
+                messages: [...state.messages, chatMessage],
+            }));
+            console.log(message.text);
+        });
+
+        subscribeTo.newPlayerJoined((err, message) => {
+            const chatMessage = {
+                classType: "system-message",
+                text: message,
+                username: "system",
+            };
+
+            this.setState(state => ({
+                messages: [...state.messages, chatMessage],
             }));
             console.log(message.text);
         });
     }
 
-    //TODO - maybe get currentUserName from redux store instead of passing as prop? idk
+    //TODO - maybe get currentUserName from redux store instead of passing as prop?
     render() {
         const { messages } = this.state;
         const { username } = this.props;
@@ -155,4 +174,4 @@ class GroupChat extends React.Component {
     }
 }
 
-export default GroupChat;
+export default ChatContainer;

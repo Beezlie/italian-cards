@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import './ChatStyles.scss'
-import { emit } from '../Socket/game.Emitters';
+import { emit } from '../Socket/GameEmitters';
 
 const ChatInput = () => {
     const [value, setValue] = useState('');

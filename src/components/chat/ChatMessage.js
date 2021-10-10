@@ -1,33 +1,26 @@
 import './ChatStyles.scss'
 
-const ChatMessage = ({ username, lastMessage, message }) => {
-    const isFirstMessageByUser = !lastMessage || lastMessage.username !== message.username;
-    let messageTitle = null;
-    if (isFirstMessageByUser && username !== message.username) {
-        messageTitle = message.username;
-    }
-
-    const getContainerStyles = (isFirstMessageByUser, username, messageUsername) => {
-        let style = {
-            marginTop: isFirstMessageByUser? '8px': '0px'
-        };
-        if (username === messageUsername) {
-            style.marginRight = '0';
-            style.marginLeft = 'auto';
+const ChatMessage = (props) => {
+    
+    const getMessageTitle = () => {
+        const { username, lastMessage, message } = props;
+        const isFirstMessageByUser = !lastMessage || lastMessage.username !== message.username;
+        if (isFirstMessageByUser && username !== message.username && "system-message" !== message.classType) {
+            return (
+                <div className="chat-message-title">
+                    {message.username}
+                </div>
+            );
         } else {
-            style.marginRight = 'auto';
-            style.marginLeft = '0';
+            return null;
         }
-        return style;
     };
 
     return (
         <div className="message-content">
-            <div className="chat-message-title">
-                {messageTitle}
-            </div>
+            {getMessageTitle()}
             <div className="message-text">
-                {message.text}
+                {props.message.text}
             </div>
         </div>
     );

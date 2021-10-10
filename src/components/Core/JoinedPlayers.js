@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ListView from 'react-uwp/ListView';
 import IconButton from 'react-uwp/IconButton';
 
-import { subscribeTo } from '../Socket/game.Subscriptions';
+import { subscribeTo } from '../Socket/GameSubscriptions';
 
 class JoinedPlayers extends React.Component {
     static contextTypes = { theme: PropTypes.object };

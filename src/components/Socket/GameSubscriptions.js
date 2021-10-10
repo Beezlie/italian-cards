@@ -56,5 +56,12 @@ export const subscribeTo = {
             console.log(message);
             cb(null, message);
         });
+    },
+
+    newPlayerJoined: cb => {
+        socket.on('new-player-joined', message => {
+            console.log(message);
+            cb(null, message);
+        });
     }
 };

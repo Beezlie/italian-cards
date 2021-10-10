@@ -8,7 +8,6 @@ import { Nav } from './components';
 import background from './assets/images/background.jpg';
 
 import './App.css';
-import 'react-chat-elements/dist/main.css';
 
 export default class App extends React.Component {
     render() {

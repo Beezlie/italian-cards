@@ -5,10 +5,10 @@
     overflow-y: scroll;
 }
 
-chat-message-list {
+.chat-message-list {
     grid-area: chat-message-list;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     padding: 0 20px;
 }
 
@@ -30,9 +30,8 @@ chat-message-list {
     justify-items: start;
 }
 
-.other-message .message-content {
-    grid-template-columns: 48px 1fr;
-    grid-column-gap: 15px;
+.system-message .message-content {
+    justify-items: center;
 }
 
 .message-text {
@@ -53,6 +52,12 @@ chat-message-list {
     color: #111;
     border: 1px solid #ddd;
     border-radius: 14px 14px 14px 0;
+}
+
+
+.system-message .message-text {
+    color: #eee;
+    font-size: small;
 }
 
 .chat-message-input {
