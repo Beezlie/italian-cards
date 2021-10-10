@@ -143,13 +143,13 @@ class GroupChat extends React.Component {
 
         return (
             <div>
-                <div className="group-chat">
+                <div className="chat-container">
                     <ChatMessageList
                         username={username}
                         messages={messages}
                     />
                 </div>
-                <ChatInput/>
+                <ChatInput />
             </div>
         );
     }

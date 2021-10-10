@@ -12,24 +12,22 @@ const ChatMessage = ({ username, lastMessage, message }) => {
             marginTop: isFirstMessageByUser? '8px': '0px'
         };
         if (username === messageUsername) {
-            style.float = 'right';
-            style.marginRight = '5px';
+            style.marginRight = '0';
+            style.marginLeft = 'auto';
         } else {
-            style.float = 'left';
-            style.marginLeft = '5px';
+            style.marginRight = 'auto';
+            style.marginLeft = '0';
         }
         return style;
     };
 
     return (
-        <div style={ getContainerStyles(isFirstMessageByUser, username, message.username) }>
+        <div className="message-content">
             <div className="chat-message-title">
                 {messageTitle}
             </div>
-            <div className="chat-message">
-                <div className={username === message.username ? 'user-chat-message' : 'player-chat-message'}>
-                    {message.text}
-                </div>
+            <div className="message-text">
+                {message.text}
             </div>
         </div>
     );
