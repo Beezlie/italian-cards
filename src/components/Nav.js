@@ -12,25 +12,43 @@ class Nav extends React.Component {
         username: PropTypes.string.isRequired,
     };
 
-    loginStatus = () => {
+    getNavDynamicContent = () => {
+        return (
+            <Navbar.Collapse className="container-fluid">
+                <this.getRoomDetails/>
+                <this.getLoginContent/>
+            </Navbar.Collapse>
+        );
+    };
+
+    getRoomDetails = () => {
+        const { roomId, password } = this.props;
+        if (roomId) {
+            return (
+                <Navbar.Text className="ml-auto">
+                    ROOM ID: {roomId} - PASSWORD: <b>{password || 'none'}</b>{' '}
+                </Navbar.Text>
+            );
+        } else {
+            return null;
+        }
+    }
+
+    getLoginContent = () => {
         const username = this.props.username;
         if (username) {
             return (
-                <Navbar.Collapse className="justify-content-end">
-                    <Navbar.Text>
-                        Signed in as: <b>{username}</b>
-                    </Navbar.Text>
-                </Navbar.Collapse>
+                <Navbar.Text className="border-left pl-2 ml-auto">
+                    Signed in as: <b>{username}</b>
+                </Navbar.Text>
             );
-        }
-
-        return (
-            <Navbar.Collapse className="justify-content-end">
-                <Form inline>
+        } else {
+            return (
+                <Form inline className="border-left pl-2 ml-auto">
                     <Button variant="outline-primary">Login</Button>
                 </Form>
-            </Navbar.Collapse>
-        );
+            );
+        }
     };
 
     render() {
@@ -40,17 +58,19 @@ class Nav extends React.Component {
                 <Navbar.Brand href="/">
                     <img src={logo} width="30" height="30" className="d-inline-block align-top" alt="logo" /> Scopa!
                 </Navbar.Brand>
-                <this.loginStatus />
+                <this.getNavDynamicContent/>
             </Navbar>
         );
     }
 }
 
 const mapStateToProps = function (state) {
-    const { user } = state;
+    const { user, room } = state;
     return {
         loggedIn: user.loggedIn,
         username: user.username,
+        roomId: room.roomId,
+        password: room.password,
     };
 };
 

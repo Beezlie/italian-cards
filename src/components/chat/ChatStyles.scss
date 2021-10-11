@@ -41,9 +41,9 @@
 }
 
 .user-message .message-text {
-    background: #0048AA;
+    background: #0048aa;
     color: #eee;
-    border: 1px solid #0048AA;
+    border: 1px solid #0048aa;
     border-radius: 14px 14px 0 14px;
 }
 
@@ -62,5 +62,6 @@
 
 .chat-message-input {
     margin-top: 5px;
-    right: auto;
+    border-radius: 14px 14px 14px 14px;
+    background-color: #cfd1d0;
 }

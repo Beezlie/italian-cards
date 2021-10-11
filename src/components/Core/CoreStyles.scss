@@ -1,0 +1,34 @@
+.lobby {
+    max-height: 100% !important;
+    display: flex;
+    flex-direction: row;
+}
+
+.left-panel {
+    height: 100%;
+    flex: 0 0 15%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.main-panel {
+    height: 100%;
+    flex: 0 0 65%;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-panel {
+    height: 100%;
+    flex: 0 0 20%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom-right-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    margin-right: 10px;
+}

@@ -16,10 +16,6 @@ const userReducer = (state = DEFAULT_STATE, action) => {
             const username = action.payload.username;
             return { ...state, username };
         }
-        case 'ADD_OPTIONS': {
-            const options = action.payload.options;
-            return { ...state, options };
-        }
         default:
             return state;
     }

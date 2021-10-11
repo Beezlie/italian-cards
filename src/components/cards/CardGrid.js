@@ -14,10 +14,7 @@ const CardGrid = (props) => {
             return (
                 <div className={"card-block"} key={`card_${index}`}>
                     <Card
-                        x={0}
-                        y={0}
-                        width={85}
-                        height={120}
+                        cardKey={cards[key].name}
                     />
                 </div>
             );

@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
-import Button from 'react-uwp/Button';
 import Toast from 'react-uwp/Toast';
 
-import GroupChat from '../chat/ChatContainer';
+import './CoreStyles.scss'
+import ChatContainer from '../chat/ChatContainer';
+import ChatInput from '../chat/ChatInput';
+import PlayerReadyButton from '../gameDetails/PlayerReadyButton';
 import { emit } from '../Socket/GameEmitters';
 import TurnTimer from './TurnTimer';
-import GameContainer from '../game/GameContainer';
+import CardContainer from '../cards/CardContainer';
+import ScoreBoard from '../gameDetails/ScoreBoard';
 
 class Lobby extends React.Component {
     state = {
@@ -50,6 +53,7 @@ class Lobby extends React.Component {
         );
     };
 
+    //TODO - use map state to props instead of passing username as prop
     render() {
         const { username, roomId, password, options } = this.props;
         const { currentUsername, isTurn } = this.state;
@@ -60,32 +64,35 @@ class Lobby extends React.Component {
         }
 
         return (
-            <Row className="mh-100 no-gutters">
-                <Col
+            <Row className="lobby no-gutters">
+                <div className="left-panel">
+                    <ScoreBoard/>
+                    <PlayerReadyButton
+                        username={username}
+                    />
+                </div>
+                <div className="main-panel"
                     style={{
                         background: theme.useFluentDesign ? theme.acrylicTexture80.background : 'none'
                     }}
                 >
-                    <GameContainer/>
-                </Col>
-                <Col lg={3} md={6}>
-                    <GroupChat
+                    <CardContainer/>
+                </div>
+                <div className="right-panel">
+                    <ChatContainer
                         username={username}
-                        setParentStates={this.setStates}
                     />
-                    <br />
-                    <h4>
-                        PASSWORD - <b>{password || 'none'}</b>{' '}
-                    </h4>
-                    <br />
-                    {isTurn && (
-                        <TurnTimer
-                            isTurn={isTurn}
-                            currentUserName={currentUsername}
-                            duration={options.maxTimerLimit || 10}
-                        />
-                    )}
-                </Col>
+                    <div className="bottom-right-panel">
+                        <ChatInput />
+                        {isTurn && (
+                            <TurnTimer
+                                isTurn={isTurn}
+                                currentUserName={currentUsername}
+                                duration={options.maxTimerLimit || 10}
+                            />
+                        )}
+                    </div>
+                </div>
             </Row>
         );
     }
