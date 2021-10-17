@@ -6,7 +6,12 @@ const ScoreBoard = () => {
         return { id, option, type };
     }
 
-    let rows = [
+    let totalScoreRows = [
+        createData('Us', '5'),
+        createData('Them', '3'),
+    ];
+
+    let roundScoreRows = [
         createData('Cards', '5'),
         createData('Sette Bello', '0'),
         createData('Dinare', '3'),
@@ -15,19 +20,21 @@ const ScoreBoard = () => {
 
     return (
         <div>
-            <table className='total-score mt-2'>
-                {rows.map(row => (
+            <table className='score-board'>
+                <th className='score-board-header'>Total Score</th>
+                {totalScoreRows.map(row => (
                     <tr key={row.id}>
                         <td>{row.option}</td>
                         <td>{row.type}</td>
                     </tr>
                 ))}
             </table>
-            <table className='current-score mt-2'>
-                {rows.map(row => (
+            <table className='score-board'>
+                <th className='score-board-header'>Current Round Score</th>
+                {roundScoreRows.map(row => (
                     <tr key={row.id}>
-                        <td>{row.option}</td>
-                        <td>{row.type}</td>
+                        <td className='score-board-data'>{row.option}</td>
+                        <td className='score-board-data'>{row.type}</td>
                     </tr>
                 ))}
             </table>

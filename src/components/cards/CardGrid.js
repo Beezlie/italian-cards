@@ -2,23 +2,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import './GameStyles.scss'
-import Card from './Card';
+import FlippableCard from './FlippableCard';
 
 const CardGrid = (props) => {
     const { cards } = props;
 
     const renderCards = () => {
-        const keys = Object.keys(cards);
+        if (cards && cards.length) {
+            const keys = Object.keys(cards);
 
-        return keys.map((key, index) => {
-            return (
-                <div className={"card-block"} key={`card_${index}`}>
-                    <Card
+            return keys.map((key, index) => {
+                return (
+                    <FlippableCard
+                        key={`card_${index}`}
                         cardKey={cards[key].name}
                     />
-                </div>
-            );
-        });
+                );
+            });
+        }
     };
 
     return (

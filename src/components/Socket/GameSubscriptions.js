@@ -13,7 +13,7 @@ export const subscribeTo = {
     },
 
     playerConnected: cb => {
-        socket.on('new-player-joined', username => {
+        socket.on('player-connected', username => {
             console.log(username);
             cb(null, username);
         });
@@ -26,8 +26,8 @@ export const subscribeTo = {
         });
     },
 
-    startGame: cb => {
-        socket.on('start-game', data => {
+    gameStart: cb => {
+        socket.on('game-start', data => {
             console.log(data);
             cb(null, data);
         });

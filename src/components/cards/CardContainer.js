@@ -3,28 +3,12 @@ import PropTypes from 'prop-types';
 
 import CardGrid from './CardGrid';
 import CardDeck from './CardDeck';
-import Card from './Card';
 import { subscribeTo } from '../Socket/GameSubscriptions';
 
 class CardContainer extends React.Component {
     state = {
-        playerHand: [
-            { name: "c1" },
-        ],
-        cards: [
-            { name: "s2" },
-            { name: "c2" },
-            { name: "d2" },
-            { name: "b4" },
-            { name: "s3" },
-            //{ name: "c3" },
-            //{ name: "d3" },
-            //{ name: "b3" },
-        ],
-        deck: [
-            { name: "b1" },
-            { name: "b1" },
-        ],
+        playerHand: [],
+        tableCards: [],
         playerHandSelection: '',
         cardSelection: [],
     };
@@ -32,25 +16,34 @@ class CardContainer extends React.Component {
     constructor(props) {
         super(props);
 
-        subscribeTo.startGame((err, data) => {
-            console.log("game starting");
+        subscribeTo.gameStart((err, data) => {
+            this.setState(state => ({
+                tableCards: data.tableCards,
+                playerHand: data.playerHand,
+            }));
         });
     }
 
     render() {
-        const { cards } = this.state;
+        const { tableCards, playerHand } = this.state;
 
         return (
             <div className="game-container">
-                <div className="game-left-panel">
-                    <CardDeck />
-                    <Card
-                        cardKey={'c2'}
+                <div className="table">
+                    <div className="game-left-panel">
+                        <CardDeck
+                            numCardsInDeck={6}
+                        />
+                    </div>
+                    <CardGrid
+                        cards={tableCards}
                     />
                 </div>
-                <CardGrid
-                    cards={cards}
-                />
+                <div className="player-hand">
+                    <CardGrid
+                        cards={playerHand}
+                    />
+                </div>
             </div>
         );
     }

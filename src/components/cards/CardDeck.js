@@ -4,13 +4,23 @@ import PropTypes from 'prop-types';
 import './GameStyles.scss'
 import Card from './Card';
 
-const CardDeck = () => {
-    
+const CardDeck = (props) => {
+    const { numCardsInDeck } = props;
+
+    var cards = [];
+    for (let i = 0; i < numCardsInDeck; i++) {
+        cards.push(
+            <div className="deck-card">
+                <Card
+                    cardKey={'back'}
+                />
+            </div>
+        );
+    }
+
     return (
-        <div className="card-deck">
-            <Card
-                cardKey={'back'}
-            />
+        <div className="deck">
+            {cards}
         </div>
     );
 }

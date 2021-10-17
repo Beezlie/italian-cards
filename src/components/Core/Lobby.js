@@ -55,7 +55,7 @@ class Lobby extends React.Component {
 
     //TODO - use map state to props instead of passing username as prop
     render() {
-        const { username, roomId, password, options } = this.props;
+        const { username, roomId, options } = this.props;
         const { currentUsername, isTurn } = this.state;
         const { theme } = this.context;
 
