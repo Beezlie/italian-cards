@@ -1,5 +1,5 @@
 .game-container {
-    height: 100% !important;
+    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: left;
@@ -14,6 +14,16 @@
     align-items: flex-start;
 }
 
+.table-cards {
+    height: 100%;
+    flex: 0 0 75%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    padding: 0 20px;
+}
+
 .game-left-panel {
     height: 100%;
     flex: 0 0 25%;
@@ -22,31 +32,36 @@
     padding: 0 20px;
 }
 
+.game-main-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .deck {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 3px;
 }
 
-.card-grid {
-    height: 100%;
-    flex: 0 0 75%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 0 20px;
+.player-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
-.player-hand {
-    height: 100%;
-    width: 100%;
-    flex: 0 0 100%;
+.player-card {
     display: flex;
-    flex-direction: row;
-    padding: 0 20px;
     justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.player-card:hover {
+    margin-bottom: 25px;
 }
 
 .card-selected {
-    border: 2px solid #30fc03;
+    border: 5px solid #30fc03;
 }

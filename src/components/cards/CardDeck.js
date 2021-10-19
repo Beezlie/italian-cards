@@ -10,9 +10,9 @@ const CardDeck = (props) => {
     var cards = [];
     for (let i = 0; i < numCardsInDeck; i++) {
         cards.push(
-            <div className="deck-card">
+            <div className="deck-card" key={`deck_card_${i}`}>
                 <Card
-                    cardKey={'back'}
+                    cardKey={"back"}
                 />
             </div>
         );

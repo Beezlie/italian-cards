@@ -23,7 +23,7 @@ export default class App extends React.Component {
                 <div className="App">
                     <Router>
                         <Nav />
-                        <Container fluid="sm" className="p-0 h-100">
+                        <Container fluid="sm" className="p-0">
                             <RenderRoutes routes={ROUTES} />
                         </Container>
                     </Router>

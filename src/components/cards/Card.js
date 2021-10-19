@@ -1,15 +1,14 @@
 import PropTypes from 'prop-types';
 
-import getItalianCardSpriteStyle from './CardSpriteMappingUtil';
+import { getItalianCardSpriteStyle } from './CardUtil';
 
 const Card = (props) => {
-    const { cardKey, handleClick } = props;
+    const { cardKey } = props;
 
     return (
         <div
             className="card"
             style={getItalianCardSpriteStyle(cardKey)}
-            onClick={handleClick}
         />
     );
 };
