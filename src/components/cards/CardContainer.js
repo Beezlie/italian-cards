@@ -1,10 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import CardGrid from './CardGrid';
 import CardDeck from './CardDeck';
 import { getValueFromCardKey, findAllSubsets } from './CardUtil';
 import { subscribeTo } from '../Socket/GameSubscriptions';
+import { emit } from '../Socket/GameEmitters';
+import { updateScore, startGame } from '../../store/actions/GameActions';
 
 class CardContainer extends React.Component {
     state = {
@@ -16,6 +19,7 @@ class CardContainer extends React.Component {
 
     constructor(props) {
         super(props);
+        const { startGame, updateScore } = this.props;
 
         subscribeTo.gameStart((err, data) => {
             const initTableCards = data.tableCards.map(function (cardKey) {
@@ -28,6 +32,17 @@ class CardContainer extends React.Component {
                 tableCards: initTableCards,
                 playerHand: initPlayerHand,
             }));
+            startGame(data);
+        });
+
+        subscribeTo.updateGame((err, data) => {
+            const newTableCards = data.tableCards.map(function (cardKey) {
+                return { key: cardKey, isFlipped: true }
+            });
+            this.setState(state => ({
+                tableCards: newTableCards,
+            }));
+            updateScore(data);
         });
     }
 
@@ -36,9 +51,8 @@ class CardContainer extends React.Component {
 
         let newCardSelection = [...cardSelection, cardKey];
         if (this.cardSelectionsMatch(playerCardSelected, newCardSelection)) {
-            this.removeCardFromHand(playerCardSelected);
-            this.removeCardsFromTable(newCardSelection);
-            this.resetCardSelection();
+            this.pickUpCards(playerCardSelected, newCardSelection);
+
         } else {
             this.setState(state => ({
                 cardSelection: newCardSelection,
@@ -57,9 +71,7 @@ class CardContainer extends React.Component {
             }));
 		}
         if (this.cardSelectionsMatch(cardKey, cardSelection)) {
-            this.removeCardFromHand(cardKey);
-            this.removeCardsFromTable(cardSelection);
-            this.resetCardSelection();
+            this.pickUpCards(cardKey, cardSelection);
         } else {
             this.setState(state => ({
                 playerCardSelected: cardKey,
@@ -84,6 +96,13 @@ class CardContainer extends React.Component {
             .reduce((pv, cv) => pv + cv, 0);
         return playerCard && getValueFromCardKey(playerCard) === cardSelectionTotal;
     }
+
+    pickUpCards = (playerCard, cardSelection) => {
+        this.removeCardFromHand(playerCard);
+        this.removeCardsFromTable(cardSelection);
+        this.resetCardSelection();
+        emit.sendPlayerMove(playerCard, cardSelection);
+	}
 
     resetCardSelection = () => {
         this.setState(state => ({
@@ -145,4 +164,13 @@ class CardContainer extends React.Component {
     }
 }
 
-export default CardContainer;
+const mapStateToProps = (state = {}) => {
+    return { ...state };
+};
+
+const mapDispatchToProps = dispatch => ({
+    startGame: data => dispatch(startGame(data)),
+    updateScore: data => dispatch(updateScore(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CardContainer);

@@ -1,45 +1,76 @@
-const ScoreBoard = () => {
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-    let id = 0;
-    function createData(option, type) {
-        id += 1;
-        return { id, option, type };
+const ScoreBoard = (props) => {
+
+    const createData = (id, label, value) => {
+        return { id, label, value };
     }
 
-    let totalScoreRows = [
-        createData('Us', '5'),
-        createData('Them', '3'),
-    ];
+    const getTeamScoreRows = () => {
+        const { team, teamScore } = props;
+        let rows = [];
+        const opposingTeam = 1 - team;
+        rows.push(createData(0, 'Us', teamScore[team]));
+        rows.push(createData(1, 'Them', teamScore[opposingTeam]));
+        return rows;
+    };
 
-    let roundScoreRows = [
-        createData('Cards', '5'),
-        createData('Sette Bello', '0'),
-        createData('Dinare', '3'),
-        createData('Scopa', '1'),
-    ];
+    const getRoundScoreRows = () => {
+        const { roundScore } = props;
+        let id = 0;
+        let rows = [];
+        for (const [key, value] of Object.entries(roundScore)) {
+            rows.push(createData(id, key, value));
+            id++;
+        }
+        return rows;
+    };
 
-    return (
-        <div>
-            <table className='score-board'>
-                <th className='score-board-header'>Total Score</th>
-                {totalScoreRows.map(row => (
-                    <tr key={row.id}>
-                        <td>{row.option}</td>
-                        <td>{row.type}</td>
-                    </tr>
-                ))}
-            </table>
-            <table className='score-board'>
-                <th className='score-board-header'>Current Round Score</th>
-                {roundScoreRows.map(row => (
-                    <tr key={row.id}>
-                        <td className='score-board-data'>{row.option}</td>
-                        <td className='score-board-data'>{row.type}</td>
-                    </tr>
-                ))}
-            </table>
-        </div>
-    );
+    if (props.gameStarted) {
+        return (
+            <div>
+                <table className='score-board'>
+                    <th className='score-board-header'>Total Score</th>
+                    {getTeamScoreRows().map(row => (
+                        <tr key={row.id}>
+                            <td>{row.label}</td>
+                            <td>{row.value}</td>
+                        </tr>
+                    ))}
+                </table>
+                <table className='score-board'>
+                    <th className='score-board-header'>Current Round Score</th>
+                    {getRoundScoreRows().map(row => (
+                        <tr key={row.id}>
+                            <td className='score-board-data'>{row.label}</td>
+                            <td className='score-board-data'>{row.value}</td>
+                        </tr>
+                    ))}
+                </table>
+            </div>
+        );
+    } else {
+        return null;
+	}
 }
 
-export default ScoreBoard;
+ScoreBoard.propTypes = {
+    roundScore: PropTypes.object,
+    teamScore: PropTypes.array,
+    gameStarted: PropTypes.bool,
+    team: PropTypes.number,
+};
+
+const mapStateToProps = function (state) {
+    const { game } = state;
+    return {
+        roundScore: game.roundScore,
+        teamScore: game.teamScore,
+        gameStarted: game.gameStarted,
+        team: game.team,
+    };
+};
+
+export default connect(mapStateToProps)(ScoreBoard);

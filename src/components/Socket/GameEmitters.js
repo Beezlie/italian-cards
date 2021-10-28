@@ -5,8 +5,15 @@ export const emit = {
         socket.emit('send-chat-message', message);
     },
 
-    playerReady: username => {
+    playerReady: (username) => {
         socket.emit('player-ready', username);
+    },
+
+    sendPlayerMove: (playerCard, cardSelection) => {
+        const data = {
+            cards: [...cardSelection, playerCard],
+        };
+        socket.emit('send-player-move', data);
     },
 
     closeConnection: () => {

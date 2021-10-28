@@ -31,6 +31,12 @@ export const subscribeTo = {
             console.log(data);
             cb(null, data);
         });
-    }
+    },
 
+    updateGame: cb => {
+        socket.on('update-game', data => {
+            console.log(data);
+            cb(null, data);
+        });
+    }
 };
