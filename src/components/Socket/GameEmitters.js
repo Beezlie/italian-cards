@@ -11,7 +11,8 @@ export const emit = {
 
     sendPlayerMove: (playerCard, cardSelection) => {
         const data = {
-            cards: [...cardSelection, playerCard],
+            playerCard: playerCard,
+            cardsPickedUp: cardSelection,
         };
         socket.emit('send-player-move', data);
     },

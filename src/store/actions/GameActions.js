@@ -1,5 +1,5 @@
-export const startGame = data => ({
-    type: 'START_GAME',
+export const startRound = data => ({
+    type: 'START_ROUND',
     payload: data
 });
 
@@ -7,7 +7,7 @@ export const endGame = () => ({
     type: 'END_GAME',
 });
 
-export const updateScore = data => ({
-    type: 'UPDATE_SCORE',
+export const updateAfterPlayerTurn = data => ({
+    type: 'UPDATE_AFTER_TURN',
     payload: data
 });

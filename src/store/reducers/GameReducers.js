@@ -8,21 +8,34 @@ const DEFAULT_STATE = {
     },
     teamScore: [0, 0],
     gameStarted: false,
+    isPlayerTurn: false,
     team: 0,
 };
 
 const gameReducer = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-        case 'UPDATE_SCORE': {
+        case 'UPDATE_AFTER_TURN': {
             const { team } = state;
-            const roundScore = action.payload.scores[team].roundScore;
-            return { ...state, roundScore };
+            return {
+                ...state,
+                isPlayerTurn: action.payload.isPlayerTurn,
+                roundScore: action.payload.scores[team].roundScore,
+            };
         }
-        case 'START_GAME': {
-            //TODO - how best to send all this data?
+        case 'START_ROUND': {
             const team = action.payload.team;
-            const roundScore = action.payload.scores[team].roundScore;
-            return { ...state, team, roundScore, gameStarted: true };
+            const teamScore = [
+                action.payload.scores[0].teamScore,
+                action.payload.scores[1].teamScore
+            ];
+            return {
+                ...state,
+                team: team,
+                isPlayerTurn: action.payload.isPlayerTurn,
+                roundScore: action.payload.scores[team].roundScore,
+                teamScore: teamScore,
+                gameStarted: true,
+            };
         }
         case 'END_GAME': {
             return { ...state, gameStarted: false };

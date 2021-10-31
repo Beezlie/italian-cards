@@ -7,7 +7,7 @@ import CardDeck from './CardDeck';
 import { getValueFromCardKey, findAllSubsets } from './CardUtil';
 import { subscribeTo } from '../Socket/GameSubscriptions';
 import { emit } from '../Socket/GameEmitters';
-import { updateScore, startGame } from '../../store/actions/GameActions';
+import { updateAfterPlayerTurn, startRound } from '../../store/actions/GameActions';
 
 class CardContainer extends React.Component {
     state = {
@@ -19,9 +19,9 @@ class CardContainer extends React.Component {
 
     constructor(props) {
         super(props);
-        const { startGame, updateScore } = this.props;
+        const { startRound, updateAfterPlayerTurn } = this.props;
 
-        subscribeTo.gameStart((err, data) => {
+        subscribeTo.startRound((err, data) => {
             const initTableCards = data.tableCards.map(function (cardKey) {
                 return { key: cardKey, isFlipped: true }
             });
@@ -32,7 +32,7 @@ class CardContainer extends React.Component {
                 tableCards: initTableCards,
                 playerHand: initPlayerHand,
             }));
-            startGame(data);
+            startRound(data);
         });
 
         subscribeTo.updateGame((err, data) => {
@@ -42,7 +42,7 @@ class CardContainer extends React.Component {
             this.setState(state => ({
                 tableCards: newTableCards,
             }));
-            updateScore(data);
+            updateAfterPlayerTurn(data);
         });
     }
 
@@ -52,7 +52,6 @@ class CardContainer extends React.Component {
         let newCardSelection = [...cardSelection, cardKey];
         if (this.cardSelectionsMatch(playerCardSelected, newCardSelection)) {
             this.pickUpCards(playerCardSelected, newCardSelection);
-
         } else {
             this.setState(state => ({
                 cardSelection: newCardSelection,
@@ -65,10 +64,12 @@ class CardContainer extends React.Component {
 
         const matchingSets = this.getMatchingCardSets(cardKey);
         if (matchingSets.length === 0) {
+            // Selected card can't pick up any other cards. It goes out of the hand and to the table
             this.removeCardFromHand(cardKey);
             this.setState(state => ({
                 tableCards: [...tableCards, { key: cardKey, isFlipped: true }],
             }));
+            emit.sendPlayerMove(cardKey, []);
 		}
         if (this.cardSelectionsMatch(cardKey, cardSelection)) {
             this.pickUpCards(cardKey, cardSelection);
@@ -164,13 +165,18 @@ class CardContainer extends React.Component {
     }
 }
 
+CardContainer.propTypes = {
+    startRound: PropTypes.func,
+    updateAfterPlayerTurn: PropTypes.func,
+};
+
 const mapStateToProps = (state = {}) => {
     return { ...state };
 };
 
 const mapDispatchToProps = dispatch => ({
-    startGame: data => dispatch(startGame(data)),
-    updateScore: data => dispatch(updateScore(data))
+    startRound: data => dispatch(startRound(data)),
+    updateAfterPlayerTurn: data => dispatch(updateAfterPlayerTurn(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardContainer);

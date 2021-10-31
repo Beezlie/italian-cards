@@ -26,8 +26,8 @@ export const subscribeTo = {
         });
     },
 
-    gameStart: cb => {
-        socket.on('game-start', data => {
+    startRound: cb => {
+        socket.on('start-round', data => {
             console.log(data);
             cb(null, data);
         });
