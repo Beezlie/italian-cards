@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 
 import CardGrid from './CardGrid';
 import CardDeck from './CardDeck';
+import Card from './Card';
 import { getValueFromCardKey, findAllSubsets } from './CardUtil';
 import { subscribeTo } from '../Socket/GameSubscriptions';
 import { emit } from '../Socket/GameEmitters';
-import { updateAfterPlayerTurn, startRound } from '../../store/actions/GameActions';
+import { updateAfterTurn, startRound } from '../../store/actions/GameActions';
 
 class CardContainer extends React.Component {
     state = {
@@ -15,11 +16,12 @@ class CardContainer extends React.Component {
         tableCards: [],
         playerCardSelected: "",
         cardSelection: [],
+        lastCardPlayed: "",
     };
 
     constructor(props) {
         super(props);
-        const { startRound, updateAfterPlayerTurn } = this.props;
+        const { startRound, updateAfterTurn } = this.props;
 
         subscribeTo.startRound((err, data) => {
             const initTableCards = data.tableCards.map(function (cardKey) {
@@ -35,14 +37,15 @@ class CardContainer extends React.Component {
             startRound(data);
         });
 
-        subscribeTo.updateGame((err, data) => {
+        subscribeTo.updateAfterTurn((err, data) => {
             const newTableCards = data.tableCards.map(function (cardKey) {
                 return { key: cardKey, isFlipped: true }
             });
             this.setState(state => ({
                 tableCards: newTableCards,
+                lastCardPlayed: data.playerCard,
             }));
-            updateAfterPlayerTurn(data);
+            updateAfterTurn(data);
         });
     }
 
@@ -134,6 +137,19 @@ class CardContainer extends React.Component {
         }));
     }
 
+    renderLastPlayedCard = () => {
+        const { lastCardPlayed } = this.state;
+        if (lastCardPlayed) {
+            return (
+                <Card
+                    cardKey={lastCardPlayed}
+                />
+            );
+        } else {
+            return null;
+		}
+	}
+
     render() {
         const { tableCards, playerHand } = this.state;
 
@@ -144,6 +160,7 @@ class CardContainer extends React.Component {
                         <CardDeck
                             numCardsInDeck={6}
                         />
+                        {this.renderLastPlayedCard()}
                     </div>
                     <div className="game-main-panel">
                         <CardGrid
@@ -167,7 +184,7 @@ class CardContainer extends React.Component {
 
 CardContainer.propTypes = {
     startRound: PropTypes.func,
-    updateAfterPlayerTurn: PropTypes.func,
+    updateAfterTurn: PropTypes.func,
 };
 
 const mapStateToProps = (state = {}) => {
@@ -176,7 +193,7 @@ const mapStateToProps = (state = {}) => {
 
 const mapDispatchToProps = dispatch => ({
     startRound: data => dispatch(startRound(data)),
-    updateAfterPlayerTurn: data => dispatch(updateAfterPlayerTurn(data))
+    updateAfterTurn: data => dispatch(updateAfterTurn(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CardContainer);

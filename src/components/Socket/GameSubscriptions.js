@@ -33,8 +33,8 @@ export const subscribeTo = {
         });
     },
 
-    updateGame: cb => {
-        socket.on('update-game', data => {
+    updateAfterTurn: cb => {
+        socket.on('update-after-turn', data => {
             console.log(data);
             cb(null, data);
         });
