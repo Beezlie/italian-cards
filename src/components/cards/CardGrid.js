@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { motion, AnimatePresence } from "framer-motion";
 
 import './GameStyles.scss'
 import DynamicCard from './DynamicCard';
@@ -7,13 +8,17 @@ import DynamicCard from './DynamicCard';
 const CardGrid = (props) => {
     const { cards, type, handleCardSelection, resetCardSelection } = props;
 
-    const renderCards = () => {
-        if (cards && cards.length) {
-            const keys = Object.keys(cards);
-
-            return keys.map((key, index) => {
-                if (type === "table-cards") {
-                    return (
+    const renderTableCards = (keys) => {
+        return (
+            <AnimatePresence>
+                {keys.map((key, index) => (
+                    <motion.div
+                        key={cards[key].key}
+                        initial={false}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1.5 }}
+                    >
                         <DynamicCard
                             key={`card_${index}`}
                             cardKey={cards[key].key}
@@ -21,21 +26,33 @@ const CardGrid = (props) => {
                             handleCardSelection={handleCardSelection}
                             resetCardSelection={resetCardSelection}
                         />
-                    );
-                } else {
-                    return (
-                        <div className="player-card">
-                            <DynamicCard
-                                key={`card_${index}`}
-                                cardKey={cards[key].key}
-                                isFlipped={cards[key].isFlipped}
-                                handleCardSelection={handleCardSelection}
-                                resetCardSelection={resetCardSelection}
-                            />
-                        </div>
-                    );
-				}
-            });
+                    </motion.div>
+                ))}
+            </AnimatePresence>
+        );
+    }
+
+    const renderPlayerCards = (keys) => {
+        return keys.map((key, index) => (
+            <DynamicCard
+                key={`card_${index}`}
+                cardKey={cards[key].key}
+                isFlipped={cards[key].isFlipped}
+                handleCardSelection={handleCardSelection}
+                resetCardSelection={resetCardSelection}
+            />
+        ));
+    }
+
+    const renderCards = () => {
+        if (cards && cards.length) {
+            const keys = Object.keys(cards);
+
+            if (type === "table-cards") {
+                return renderTableCards(keys);
+            } else {
+                return renderPlayerCards(keys);
+			}
         }
     };
 
