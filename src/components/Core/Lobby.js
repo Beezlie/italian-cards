@@ -7,10 +7,8 @@ import Toast from 'react-uwp/Toast';
 
 import './CoreStyles.scss'
 import ChatContainer from '../chat/ChatContainer';
-import ChatInput from '../chat/ChatInput';
 import PlayerReadyButton from '../gameDetails/PlayerReadyButton';
 import { emit } from '../Socket/GameEmitters';
-import TurnTimer from './TurnTimer';
 import CardContainer from '../cards/CardContainer';
 import ScoreBoard from '../gameDetails/ScoreBoard';
 
@@ -82,16 +80,6 @@ class Lobby extends React.Component {
                     <ChatContainer
                         username={username}
                     />
-                    <div className="bottom-right-panel">
-                        <ChatInput />
-                        {isTurn && (
-                            <TurnTimer
-                                isTurn={isTurn}
-                                currentUserName={currentUsername}
-                                duration={options.maxTimerLimit || 10}
-                            />
-                        )}
-                    </div>
                 </div>
             </Row>
         );

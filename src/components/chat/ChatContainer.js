@@ -1,62 +1,65 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './ChatStyles.scss'
-import ChatMessageList from './ChatMessageList';
+import './styles';
+import Launcher from './Launcher';
+import { emit } from '../Socket/GameEmitters';
 import { subscribeTo } from '../Socket/GameSubscriptions';
 
 class ChatContainer extends React.Component {
-    state = {
-        messages: [],
-    };
-
-    static propTypes = {
-        username: PropTypes.string.isRequired,
-    };
-
+    
     constructor(props) {
         super(props);
 
+        this.state = {
+            messages: [],
+        };
+
         subscribeTo.updateChat((err, message) => {
             const { username } = this.props;
-            const chatMessage = {
-                classType: message.username === username ? "user-message" : "player-message",
-                text: message.text,
-                username: message.username,
-            };
-
-            this.setState(state => ({
-                messages: [...state.messages, chatMessage],
-            }));
-        });
-
-        subscribeTo.playerConnected((err, username) => {
-            const chatMessage = {
-                classType: "system-message",
-                text: `${username} joined the game`,
-                username: "system",
-            };
-
-            this.setState(state => ({
-                messages: [...state.messages, chatMessage],
-            }));
+            //TODO - maybe server should only send to the others users (exclude user who sent msg)
+            if (message.username !== username) {
+                this._sendMessage(message.text);
+			}
         });
     }
 
-    //TODO - maybe get currentUserName from redux store instead of passing as prop?
-    render() {
-        const { messages } = this.state;
-        const { username } = this.props;
+    _onMessageWasSent(message) {
+        emit.sendChatMessage(message);
+        this.setState({
+            messages: [...this.state.messages, message]
+        })
+    }
 
-        return (
-            <div className="chat-container">
-                <ChatMessageList
-                    username={username}
-                    messages={messages}
-                />
-            </div>
-        );
+    _sendMessage(text) {
+        if (text.length > 0) {
+            this.setState({
+                messages: [...this.state.messages, {
+                    author: 'them',
+                    type: 'text',
+                    data: { text }
+                }]
+            })
+        }
+    }
+
+    render() {
+        return (<div>
+            <Launcher
+                agentProfile={{
+                    teamName: 'react-chat-window',
+                    imageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png'
+                }}
+                onMessageWasSent={this._onMessageWasSent.bind(this)}
+                messageList={this.state.messages}
+                showEmoji
+            />
+        </div>)
     }
 }
+
+ChatContainer.propTypes = {
+    username: PropTypes.string.isRequired,
+};
 
 export default ChatContainer;
