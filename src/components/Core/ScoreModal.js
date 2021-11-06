@@ -3,20 +3,21 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Modal from "./Modal";
 
-//TODO - also show opposite team round score
 const ScoreModal = (props) => {
-    const { roundScore } = props;
+    const { roundScore, team, gameStarted } = props;
     const [show, setShow] = useState(false);
 
-    const createData = (id, label, value) => {
-        return { id, label, value };
+    const createData = (id, label, value1, value2) => {
+        return { id, label, value1, value2 };
     }
 
     const getRoundScoreRows = () => {
         let id = 0;
         let rows = [];
-        for (const [key, value] of Object.entries(roundScore)) {
-            rows.push(createData(id, key, value));
+        const usRoundScore = roundScore[team];
+        const themRoundScore = roundScore[1 - team];
+        for (const key of Object.keys(usRoundScore)) {
+            rows.push(createData(id, key, usRoundScore[key], themRoundScore[key]));
             id++;
         }
         return rows;
@@ -25,10 +26,14 @@ const ScoreModal = (props) => {
     const getRoundScoreTable = () => {
         return (
             <table className='round-score'>
+                <th>Category</th>
+                <th>Us</th>
+                <th>Them</th>
                 {getRoundScoreRows().map(row => (
                     <tr key={row.id}>
                         <td className='score-board-data'>{row.label}</td>
-                        <td className='score-board-data'>{row.value}</td>
+                        <td className='score-board-data'>{row.value1}</td>
+                        <td className='score-board-data'>{row.value2}</td>
                     </tr>
                 ))}
             </table>
@@ -36,7 +41,9 @@ const ScoreModal = (props) => {
     }
 
     useEffect(() => {
-        setShow(true);
+        if (gameStarted) {
+            setShow(true);
+        }
     }, [roundScore]);
 
     return (
@@ -48,12 +55,16 @@ const ScoreModal = (props) => {
 
 ScoreModal.propTypes = {
     roundScore: PropTypes.object,
+    team: PropTypes.number,
+    gameStarted: PropTypes.bool,
 };
 
 const mapStateToProps = function (state) {
     const { game } = state;
     return {
         roundScore: game.roundScore,
+        team: game.team,
+        gameStarted: game.gameStarted,
     };
 };
 
