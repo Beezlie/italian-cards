@@ -11,16 +11,16 @@ import { emit } from '../Socket/GameEmitters';
 import { updateAfterTurn, startRound } from '../../store/actions/GameActions';
 
 class CardContainer extends React.Component {
-    state = {
-        playerHand: [],
-        tableCards: [],
-        playerCardSelected: "",
-        cardSelection: [],
-        lastCardPlayed: "",
-    };
 
     constructor(props) {
         super(props);
+        this.state = {
+            playerHand: [],
+            tableCards: [],
+            playerCardSelected: "",
+            cardSelection: [],
+            lastCardPlayed: "",
+        };
         const { startRound, updateAfterTurn } = this.props;
 
         subscribeTo.startRound((err, data) => {

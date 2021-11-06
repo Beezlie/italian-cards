@@ -34,10 +34,6 @@ class UserInput extends Component {
         this.setState({ inputHasText });
     }
 
-    _showFilePicker() {
-        this._fileUploadButton.click();
-    }
-
     toggleEmojiPicker = (e) => {
         e.preventDefault();
         if (!this.state.emojiPickerIsOpen) {
@@ -63,12 +59,6 @@ class UserInput extends Component {
                 data: { text }
             });
             this.userInput.innerHTML = '';
-        }
-    }
-
-    _onFilesSelected(event) {
-        if (event.target.files && event.target.files.length > 0) {
-            this.props.onFilesSelected(event.target.files);
         }
     }
 
@@ -148,7 +138,6 @@ class UserInput extends Component {
 
 UserInput.propTypes = {
     onSubmit: PropTypes.func.isRequired,
-    onFilesSelected: PropTypes.func.isRequired,
     showEmoji: PropTypes.bool
 };
 

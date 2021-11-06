@@ -15,11 +15,9 @@ const DEFAULT_STATE = {
 const gameReducer = (state = DEFAULT_STATE, action) => {
     switch (action.type) {
         case 'UPDATE_AFTER_TURN': {
-            const { team } = state;
             return {
                 ...state,
                 isPlayerTurn: action.payload.isPlayerTurn,
-                roundScore: action.payload.scores[team].roundScore,
             };
         }
         case 'START_ROUND': {

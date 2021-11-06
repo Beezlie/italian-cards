@@ -17,17 +17,6 @@ const ScoreBoard = (props) => {
         return rows;
     };
 
-    const getRoundScoreRows = () => {
-        const { roundScore } = props;
-        let id = 0;
-        let rows = [];
-        for (const [key, value] of Object.entries(roundScore)) {
-            rows.push(createData(id, key, value));
-            id++;
-        }
-        return rows;
-    };
-
     if (props.gameStarted) {
         return (
             <div>
@@ -37,15 +26,6 @@ const ScoreBoard = (props) => {
                         <tr key={row.id}>
                             <td>{row.label}</td>
                             <td>{row.value}</td>
-                        </tr>
-                    ))}
-                </table>
-                <table className='score-board'>
-                    <th className='score-board-header'>Current Round Score</th>
-                    {getRoundScoreRows().map(row => (
-                        <tr key={row.id}>
-                            <td className='score-board-data'>{row.label}</td>
-                            <td className='score-board-data'>{row.value}</td>
                         </tr>
                     ))}
                 </table>

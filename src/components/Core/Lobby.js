@@ -9,24 +9,24 @@ import './CoreStyles.scss'
 import ChatContainer from '../chat/ChatContainer';
 import PlayerReadyButton from '../gameDetails/PlayerReadyButton';
 import { emit } from '../Socket/GameEmitters';
+import { subscribeTo } from '../Socket/GameSubscriptions';
 import CardContainer from '../cards/CardContainer';
 import ScoreBoard from '../gameDetails/ScoreBoard';
+import ScoreModal from './ScoreModal';
 
 class Lobby extends React.Component {
-    state = {
-        warning: [true, '', ''],
-        isReady: false,
-        isTurn: false,
-        currentUsername: ''
-    };
 
     static contextTypes = { theme: PropTypes.object };
 
-    static propTypes = {
-        roomId: PropTypes.string.isRequired,
-        password: PropTypes.string.isRequired,
-        options: PropTypes.object.isRequired
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            warning: [true, '', ''],
+            isReady: false,
+            isTurn: false,
+            currentUsername: ''
+        };
+    }
 
     setStates = states => {
         return states.forEach(state => {
@@ -38,7 +38,7 @@ class Lobby extends React.Component {
         return (
             <Toast
                 showCloseIcon
-                closeDelay={3000}
+                closeDelay={10000}
                 defaultShow={warning[0]}
                 title={warning[1]}
                 description={warning[2]}
@@ -54,7 +54,7 @@ class Lobby extends React.Component {
     //TODO - use map state to props instead of passing username as prop
     render() {
         const { username, roomId, options } = this.props;
-        const { currentUsername, isTurn } = this.state;
+        const { currentUsername, isTurn, warning } = this.state;
         const { theme } = this.context;
 
         if (!roomId) {
@@ -80,10 +80,17 @@ class Lobby extends React.Component {
                     <ChatContainer
                         username={username}
                     />
+                    <ScoreModal/>
                 </div>
             </Row>
         );
     }
+}
+
+Lobby.propTypes = {
+    roomId: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    options: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = state => {
