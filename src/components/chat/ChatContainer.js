@@ -19,19 +19,19 @@ class ChatContainer extends React.Component {
             const { username } = this.props;
             //TODO - maybe server should only send to the others users (exclude user who sent msg)
             if (message.username !== username) {
-                this._sendMessage(message.text);
+                this._recieveMessage(message.text);
 			}
         });
     }
 
     _onMessageWasSent(message) {
-        emit.sendChatMessage(message);
+        emit.sendChatMessage(message.data.text);
         this.setState({
             messages: [...this.state.messages, message]
         })
     }
 
-    _sendMessage(text) {
+    _recieveMessage(text) {
         if (text.length > 0) {
             this.setState({
                 messages: [...this.state.messages, {

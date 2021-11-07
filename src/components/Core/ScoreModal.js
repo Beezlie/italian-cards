@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import Modal from "./Modal";
 
 const ScoreModal = (props) => {
-    const { roundScore, team, gameStarted } = props;
+    const { teamScore, roundScore, team, gameStarted } = props;
     const [show, setShow] = useState(false);
 
     const createData = (id, label, value1, value2) => {
         return { id, label, value1, value2 };
     }
 
+    // TODO - highlight the cells with the higher score. Also include a row for total score
     const getRoundScoreRows = () => {
         let id = 0;
         let rows = [];
@@ -20,24 +21,27 @@ const ScoreModal = (props) => {
             rows.push(createData(id, key, usRoundScore[key], themRoundScore[key]));
             id++;
         }
+        rows.push(createData(id, "Total", teamScore[team], teamScore[1 - team]));
         return rows;
     }
 
     const getRoundScoreTable = () => {
-        return (
-            <table className='round-score'>
-                <th>Category</th>
-                <th>Us</th>
-                <th>Them</th>
-                {getRoundScoreRows().map(row => (
-                    <tr key={row.id}>
-                        <td className='score-board-data'>{row.label}</td>
-                        <td className='score-board-data'>{row.value1}</td>
-                        <td className='score-board-data'>{row.value2}</td>
-                    </tr>
-                ))}
-            </table>
-        );
+        if (gameStarted) {
+            return (
+                <table className='round-score'>
+                    <th>Category</th>
+                    <th>Us</th>
+                    <th>Them</th>
+                    {getRoundScoreRows().map(row => (
+                        <tr key={row.id}>
+                            <td className='score-board-data'>{row.label}</td>
+                            <td className='score-board-data'>{row.value1}</td>
+                            <td className='score-board-data'>{row.value2}</td>
+                        </tr>
+                    ))}
+                </table>
+            );
+        }
     }
 
     useEffect(() => {
@@ -47,13 +51,14 @@ const ScoreModal = (props) => {
     }, [roundScore]);
 
     return (
-        <Modal title="Round Score" onClose={() => setShow(false)} show = { show } >
+        <Modal title="Score" onClose={() => setShow(false)} show = { show } >
             {getRoundScoreTable()}
         </Modal>
     );
 }
 
 ScoreModal.propTypes = {
+    teamScore: PropTypes.object,
     roundScore: PropTypes.object,
     team: PropTypes.number,
     gameStarted: PropTypes.bool,
@@ -62,6 +67,7 @@ ScoreModal.propTypes = {
 const mapStateToProps = function (state) {
     const { game } = state;
     return {
+        teamScore: game.teamScore,
         roundScore: game.roundScore,
         team: game.team,
         gameStarted: game.gameStarted,

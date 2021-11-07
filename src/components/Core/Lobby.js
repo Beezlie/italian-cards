@@ -64,7 +64,6 @@ class Lobby extends React.Component {
         return (
             <Row className="lobby no-gutters">
                 <div className="left-panel">
-                    <ScoreBoard/>
                     <PlayerReadyButton
                         username={username}
                     />
