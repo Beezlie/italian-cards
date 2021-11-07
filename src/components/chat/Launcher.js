@@ -30,15 +30,6 @@ class Launcher extends Component {
         audio.play();
     }
 
-    handleClick() {
-        if (this.props.handleClick !== undefined) {
-            this.props.handleClick();
-        } else {
-            this.setState({
-                isOpen: !this.state.isOpen,
-            });
-        }
-    }
     render() {
         const isOpen = this.props.hasOwnProperty('isOpen') ? this.props.isOpen : this.state.isOpen;
         const classList = [
@@ -47,7 +38,7 @@ class Launcher extends Component {
         ];
         return (
             <div id="sc-launcher">
-                <div className={classList.join(' ')} onClick={this.handleClick.bind(this)}>
+                <div className={classList.join(' ')} onClick={this.props.handleClick.bind(this)}>
                     <MessageCount count={this.props.newMessagesCount} isOpen={isOpen} />
                     <img className={'sc-open-icon'} src={launcherIconActive} />
                     <img className={'sc-closed-icon'} src={launcherIcon} />
@@ -55,10 +46,9 @@ class Launcher extends Component {
                 <ChatWindow
                     messageList={this.props.messageList}
                     onUserInputSubmit={this.props.onMessageWasSent}
-                    onFilesSelected={this.props.onFilesSelected}
                     agentProfile={this.props.agentProfile}
                     isOpen={isOpen}
-                    onClose={this.handleClick.bind(this)}
+                    onClose={this.props.handleClick.bind(this)}
                     showEmoji={this.props.showEmoji}
                 />
             </div>
@@ -76,7 +66,6 @@ const MessageCount = (props) => {
 };
 
 Launcher.propTypes = {
-    onMessageWasReceived: PropTypes.func,
     onMessageWasSent: PropTypes.func,
     newMessagesCount: PropTypes.number,
     isOpen: PropTypes.bool,

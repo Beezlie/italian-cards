@@ -12,46 +12,63 @@ class ChatContainer extends React.Component {
         super(props);
 
         this.state = {
+            chatOpen: false,
             messages: [],
+            newMessagesCount: 0,
         };
 
         subscribeTo.updateChat((err, message) => {
             const { username } = this.props;
             //TODO - maybe server should only send to the others users (exclude user who sent msg)
             if (message.username !== username) {
-                this._recieveMessage(message.text);
+                this._recieveMessage(message);
 			}
         });
     }
 
     _onMessageWasSent(message) {
-        emit.sendChatMessage(message.data.text);
+        emit.sendChatMessage(message);
         this.setState({
             messages: [...this.state.messages, message]
-        })
+        });
     }
 
-    _recieveMessage(text) {
-        if (text.length > 0) {
-            this.setState({
-                messages: [...this.state.messages, {
-                    author: 'them',
-                    type: 'text',
-                    data: { text }
-                }]
-            })
-        }
+    _recieveMessage(message) {
+        this.setState({
+            messages: [...this.state.messages, {
+                author: 'them',
+                type: message.type,
+                data: message.data,
+            }],
+            newMessagesCount: this.state.newMessagesCount + 1
+        });
     }
+
+    _handleClick() {
+        if (this.state.chatOpen) {
+            this.setState({
+                chatOpen: false
+            });
+        } else {
+            this.setState({
+                chatOpen: true,
+                newMessagesCount: 0
+            });
+		}
+	}
 
     render() {
         return (<div>
             <Launcher
                 agentProfile={{
-                    teamName: 'react-chat-window',
+                    teamName: 'Game Chat',
                     imageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png'
                 }}
+                handleClick={this._handleClick.bind(this)}
+                isOpen={this.state.chatOpen}
                 onMessageWasSent={this._onMessageWasSent.bind(this)}
                 messageList={this.state.messages}
+                newMessagesCount={this.state.newMessagesCount}
                 showEmoji
             />
         </div>)

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Button from 'react-uwp/Button';
 
-import './GameDetailsStyles.scss'
 import { emit } from '../Socket/GameEmitters';
 
 const PlayerReadyButton = (props) => {

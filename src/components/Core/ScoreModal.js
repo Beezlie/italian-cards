@@ -29,9 +29,14 @@ const ScoreModal = (props) => {
         if (gameStarted) {
             return (
                 <table className='round-score'>
-                    <th>Category</th>
-                    <th>Us</th>
-                    <th>Them</th>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Us</th>
+                            <th>Them</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {getRoundScoreRows().map(row => (
                         <tr key={row.id}>
                             <td className='score-board-data'>{row.label}</td>
@@ -39,6 +44,7 @@ const ScoreModal = (props) => {
                             <td className='score-board-data'>{row.value2}</td>
                         </tr>
                     ))}
+                    </tbody>
                 </table>
             );
         }
@@ -48,7 +54,7 @@ const ScoreModal = (props) => {
         if (gameStarted) {
             setShow(true);
         }
-    }, [roundScore]);
+    }, [roundScore, gameStarted]);
 
     return (
         <Modal title="Score" onClose={() => setShow(false)} show = { show } >
@@ -58,8 +64,8 @@ const ScoreModal = (props) => {
 }
 
 ScoreModal.propTypes = {
-    teamScore: PropTypes.object,
-    roundScore: PropTypes.object,
+    teamScore: PropTypes.array,
+    roundScore: PropTypes.array,
     team: PropTypes.number,
     gameStarted: PropTypes.bool,
 };

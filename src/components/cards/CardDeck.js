@@ -25,4 +25,8 @@ const CardDeck = (props) => {
     );
 }
 
+CardDeck.propTypes = {
+    numCardsInDeck: PropTypes.number,
+};
+
 export default CardDeck;

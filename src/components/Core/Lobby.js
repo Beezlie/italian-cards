@@ -8,10 +8,7 @@ import Toast from 'react-uwp/Toast';
 import './CoreStyles.scss'
 import ChatContainer from '../chat/ChatContainer';
 import PlayerReadyButton from '../gameDetails/PlayerReadyButton';
-import { emit } from '../Socket/GameEmitters';
-import { subscribeTo } from '../Socket/GameSubscriptions';
 import CardContainer from '../cards/CardContainer';
-import ScoreBoard from '../gameDetails/ScoreBoard';
 import ScoreModal from './ScoreModal';
 
 class Lobby extends React.Component {
