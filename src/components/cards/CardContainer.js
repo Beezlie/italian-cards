@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import CardGrid from './CardGrid';
 import CardDeck from './CardDeck';
 import Card from './Card';
-import { getValueFromCardKey, findAllSubsets } from './CardUtil';
+import { getValueFromCardKey } from './CardUtil';
 import { subscribeTo } from '../Socket/GameSubscriptions';
 import { emit } from '../Socket/GameEmitters';
 import { updateAfterTurn, startRound } from '../../store/actions/GameActions';
+import { restUrl } from '../../env';
 
 class CardContainer extends React.Component {
 
@@ -52,47 +54,63 @@ class CardContainer extends React.Component {
     handleTableCardSelection = (cardKey) => {
         const { playerCardSelected, cardSelection } = this.state;
 
-        let newCardSelection = [...cardSelection, cardKey];
-        if (this.cardSelectionsMatch(playerCardSelected, newCardSelection)) {
-            this.pickUpCards(playerCardSelected, newCardSelection);
-        } else {
-            this.setState(state => ({
-                cardSelection: newCardSelection,
-            }));
+        if (playerCardSelected) {
+            let newCardSelection = [...cardSelection, cardKey];
+            if (this.cardSelectionsMatch(playerCardSelected, newCardSelection)) {
+                this.pickUpCards(playerCardSelected, newCardSelection);
+            } else {
+                this.setState(state => ({
+                    cardSelection: newCardSelection,
+                }));
+            }
         }
     }
 
     handlePlayerCardSelection = (cardKey) => {
-        const { cardSelection, tableCards } = this.state;
-
-        const matchingSets = this.getMatchingCardSets(cardKey);
-        if (matchingSets.length === 0) {
-            // Selected card can't pick up any other cards. It goes out of the hand and to the table
-            this.removeCardFromHand(cardKey);
-            this.setState(state => ({
-                tableCards: [...tableCards, { key: cardKey, isFlipped: true }],
-            }));
-            emit.sendPlayerMove(cardKey, []);
-		}
-        if (this.cardSelectionsMatch(cardKey, cardSelection)) {
-            this.pickUpCards(cardKey, cardSelection);
-        } else {
-            this.setState(state => ({
-                playerCardSelected: cardKey,
-            }));
-        }
-    }
-
-    getMatchingCardSets = (cardKey) => {
         const { tableCards } = this.state;
 
-        const cardValue = getValueFromCardKey(cardKey);
-        const tableCardValues = tableCards.map(card => getValueFromCardKey(card.key));
-
-        //This is an example of the perfect sum problem (NP hard). 
-        //Luckily our set of cards wont be large so it shouldn't take too long to find the subsets
-        return findAllSubsets(tableCardValues, cardValue);
+        this.getMatchingCardSets(cardKey)
+            .then(result => {
+                if (result.length === 0) {
+                    // Selected card can't pick up any other cards. It goes out of the hand and to the table
+                    this.removeCardFromHand(cardKey);
+                    this.setState(state => ({
+                        tableCards: [...tableCards, { key: cardKey, isFlipped: true }],
+                    }));
+                    emit.sendPlayerMove(cardKey, []);
+                } else if (result.length === 1) {
+                    // Only one available move so player must take it
+                    this.pickUpCards(cardKey, result[0].matches);
+                } else {
+                    // There are multiple matching sets. Player must choose manually from the table cards
+                    this.setState(state => ({
+                        playerCardSelected: cardKey,
+                    }));
+                }
+            })
+            .catch(e => {
+                console.log("Unable to retrieve matching card sets: " + e.message);
+            });
     }
+
+    getMatchingCardSets = async (cardKey) => {
+        const { tableCards } = this.state;
+        const data = {
+            tableCards: tableCards.map(card => card.key),
+            playerCard: cardKey
+        };
+        try {
+            const response = await axios.post(`${restUrl}/game/getMatchingCardSets`, data);
+            if (!response.data.success || !response) {
+                //TODO - how to handle error?
+                console.log("Unable to retrieve matching card sets");
+            }
+            return response.data.result;
+        } catch (error) {
+            console.log(error.message);
+            //TODO - how to handle error?
+        }
+    };
 
     cardSelectionsMatch = (playerCard, cardSelection) => {
         const cardSelectionTotal = cardSelection
