@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from "framer-motion";
 
 import './GameStyles.scss'
-import DynamicCard from './DynamicCard';
+import TableCard from './TableCard';
+import PlayerCard from './PlayerCard';
 
 const CardGrid = (props) => {
-    const { cards, type, handleCardSelection, resetCardSelection } = props;
+    const { cards, type, playerCardSelected, handleCardSelection, resetCardSelection } = props;
 
     const renderTableCards = (keys) => {
         return (
@@ -19,10 +20,10 @@ const CardGrid = (props) => {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 1.5 }}
                     >
-                        <DynamicCard
+                        <TableCard
                             key={`card_${index}`}
                             cardKey={cards[key].key}
-                            isFlipped={cards[key].isFlipped}
+                            playerCardSelected={playerCardSelected}
                             handleCardSelection={handleCardSelection}
                             resetCardSelection={resetCardSelection}
                         />
@@ -34,13 +35,15 @@ const CardGrid = (props) => {
 
     const renderPlayerCards = (keys) => {
         return keys.map((key, index) => (
-            <DynamicCard
-                key={`card_${index}`}
-                cardKey={cards[key].key}
-                isFlipped={cards[key].isFlipped}
-                handleCardSelection={handleCardSelection}
-                resetCardSelection={resetCardSelection}
-            />
+            <div className="player-card">
+                <PlayerCard
+                    key={`card_${index}`}
+                    cardKey={cards[key].key}
+                    isFlipped={cards[key].isFlipped}
+                    handleCardSelection={handleCardSelection}
+                    resetCardSelection={resetCardSelection}
+                />
+             </div>
         ));
     }
 

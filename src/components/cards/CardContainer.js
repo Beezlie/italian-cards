@@ -169,7 +169,7 @@ class CardContainer extends React.Component {
 	}
 
     render() {
-        const { tableCards, playerHand } = this.state;
+        const { tableCards, playerHand, playerCardSelected } = this.state;
 
         return (
             <div className="game-container">
@@ -184,12 +184,14 @@ class CardContainer extends React.Component {
                         <CardGrid
                             type="table-cards"
                             cards={tableCards}
+                            playerCardSelected={playerCardSelected}
                             handleCardSelection={this.handleTableCardSelection}
                             resetCardSelection={this.resetCardSelection}
                         />
                         <CardGrid
                             type="player-cards"
                             cards={playerHand}
+                            playerCardSelected={playerCardSelected}
                             handleCardSelection={this.handlePlayerCardSelection}
                             resetCardSelection={this.resetCardSelection}
                         />

@@ -1,14 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import ReactCardFlip from 'react-card-flip';
 
-import Card from './Card';
-
-const DynamicCard = (props) => {
-    const { cardKey, isFlipped, isPlayerTurn, handleCardSelection, resetCardSelection } = props;
+const CardSelector = (props) => {
+    const { cardKey, isSelectable, handleCardSelection, resetCardSelection, isPlayerTurn } = props;
     const [isSelected, setIsSelected] = useState(false);
-    const cardRef = useRef();
 
     const handleClickOutside = (e) => {
         if (e.target.className !== "card") {
@@ -18,7 +14,7 @@ const DynamicCard = (props) => {
     };
 
     const handleClickInside = (e) => {
-        if (isPlayerTurn) {
+        if (isPlayerTurn && isSelectable) {
             setIsSelected(true);
             handleCardSelection(cardKey);
         }
@@ -30,9 +26,9 @@ const DynamicCard = (props) => {
         }
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [isFlipped, isPlayerTurn, isSelected]);
+    }, [isPlayerTurn, isSelected]);
 
-    const getCardWrapperStyle = () => {
+    const getStyle = () => {
         let style = {};
         if (!isPlayerTurn) {
             style.opacity = 0.4;
@@ -42,36 +38,22 @@ const DynamicCard = (props) => {
             style.border = '5px solid #30fc03';
         }
         return style;
-	}
+    }
 
-    //TODO - use playerTurn for card selection highlighting and grey overlay when false
     return (
-        <div>
-            <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
-                <div>
-                    <Card
-                        cardKey={"back"}
-                    />
-                </div>
-                <div
-                    className='card-wrapper'
-                    style={getCardWrapperStyle()}
-                    ref={cardRef}
-                    onClick={handleClickInside}
-                >
-                    <Card
-                        cardKey={cardKey}
-                    />
-                </div>
-            </ReactCardFlip>
+        <div
+            className='card-selector'
+            style={getStyle()}
+            onClick={handleClickInside}
+        >
+            {props.children}
         </div>
     );
 };
 
-DynamicCard.propTypes = {
-    cardKey: PropTypes.string,
-    isFlipped: PropTypes.bool,
+CardSelector.propTypes = {
     isPlayerTurn: PropTypes.bool,
+    isSelectable: PropTypes.bool,
     handleCardSelection: PropTypes.func,
     resetCardSelection: PropTypes.func,
 };
@@ -83,4 +65,4 @@ const mapStateToProps = function (state) {
     };
 };
 
-export default connect(mapStateToProps)(DynamicCard);
+export default connect(mapStateToProps)(CardSelector);
