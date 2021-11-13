@@ -1,52 +1,59 @@
-.game-container {
+.card-container {
     height: 90vh;
-    display: flex;
-    flex-direction: column;
     justify-content: left;
     align-items: flex-start;
 }
 
-.table {
-    height: 100% !important;
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: flex-start;
-}
-
-.table-cards {
-    height: 100%;
-    flex: 0 0 75%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    padding: 0 20px;
-}
-
-.game-left-panel {
-    height: 100%;
+.card-container .left-panel {
     flex: 0 0 25%;
-    display: flex;
-    flex-direction: column;
     padding: 0 20px;
 }
 
-.game-main-panel {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+.card-container .main-panel {
+    height: 90vh;
 }
 
 .deck {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 3px;
+    align-self: flex-end;
+    margin-bottom: 5px;
+}
+
+.table-cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.table-card {
+    cursor: pointer;
+    padding: 0.5rem 0.5rem;
 }
 
 .player-cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-self: flex-end;
+    margin-bottom: 5px;
+}
+
+.player-card {
+    cursor: pointer;
+    padding: 0.5rem 0.5rem;
+}
+
+/*
+.player-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(50px, 100px));
+    flex: 1;
+    align-self: flex-end;
+    margin-bottom: 5px;
 }
 
 .player-card {
@@ -54,13 +61,11 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    padding: 0.5rem 0.5rem;
 }
 
 .player-card:hover {
     z-index: 10;
     margin-bottom: 20px;
 }
-
-.card-selected {
-    border: 5px solid #30fc03;
-}
+*/

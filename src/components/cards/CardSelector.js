@@ -1,41 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 const CardSelector = (props) => {
-    const { cardKey, isSelectable, handleCardSelection, resetCardSelection, isPlayerTurn } = props;
-    const [isSelected, setIsSelected] = useState(false);
+    const { cardKey, cardSelection, handleCardSelection, resetCardSelection, isPlayerTurn } = props;
 
     const handleClickOutside = (e) => {
         if (e.target.className !== "card") {
-            setIsSelected(false);
             resetCardSelection();
         }
     };
 
     const handleClickInside = (e) => {
-        if (isPlayerTurn && isSelectable) {
-            setIsSelected(true);
+        if (isPlayerTurn) {
             handleCardSelection(cardKey);
         }
     };
 
     useEffect(() => {
-        if (!isPlayerTurn) {
-            setIsSelected(false);
-        }
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [isPlayerTurn, isSelected]);
+    }, []);
 
     const getStyle = () => {
         let style = {};
-        if (!isPlayerTurn) {
+        const isSelected = cardSelection.filter(card => card.key === cardKey).length !== 0;
+        if (isSelected) {
+            style.border = '5px solid #30fc03';
+        } else if (!isPlayerTurn) {
             style.opacity = 0.4;
             style.filter = 'alpha(opacity = 40)'; /* msie */
             style.backgroundColor = '#000';
-        } else if (isSelected) {
-            style.border = '5px solid #30fc03';
         }
         return style;
     }
@@ -53,7 +48,7 @@ const CardSelector = (props) => {
 
 CardSelector.propTypes = {
     isPlayerTurn: PropTypes.bool,
-    isSelectable: PropTypes.bool,
+    cardSelection: PropTypes.array,
     handleCardSelection: PropTypes.func,
     resetCardSelection: PropTypes.func,
 };

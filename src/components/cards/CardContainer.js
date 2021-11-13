@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { Row } from 'react-bootstrap';
 
 import CardGrid from './CardGrid';
-import CardDeck from './CardDeck';
-import Card from './Card';
 import { getValueFromCardKey } from './CardUtil';
 import { subscribeTo } from '../Socket/GameSubscriptions';
 import { emit } from '../Socket/GameEmitters';
@@ -19,9 +18,7 @@ class CardContainer extends React.Component {
         this.state = {
             playerHand: [],
             tableCards: [],
-            playerCardSelected: "",
             cardSelection: [],
-            lastCardPlayed: "",
         };
         const { startRound, updateAfterTurn } = this.props;
 
@@ -40,24 +37,34 @@ class CardContainer extends React.Component {
         });
 
         subscribeTo.updateAfterTurn((err, data) => {
-            const newTableCards = data.tableCards.map(function (cardKey) {
-                return { key: cardKey, isFlipped: true }
-            });
+            //Add card played to table cards
             this.setState(state => ({
-                tableCards: newTableCards,
-                lastCardPlayed: data.playerCard,
+                tableCards: [...this.state.tableCards, { key: data.cardPlayed, isFlipped: true }]
             }));
+
+            //Remove cards from table if any were taken
+            if (data.cardsPickedUp.length) {
+                const updatedTableCards = this.state.tableCards
+                    .filter(card => card.key !== data.cardPlayed && !data.cardsPickedUp.includes(card.key));
+                this.setState(state => ({
+                    tableCards: updatedTableCards,
+                }));
+            }
             updateAfterTurn(data);
         });
     }
 
     handleTableCardSelection = (cardKey) => {
-        const { playerCardSelected, cardSelection } = this.state;
+        const { cardSelection } = this.state;
 
-        if (playerCardSelected) {
-            let newCardSelection = [...cardSelection, cardKey];
-            if (this.cardSelectionsMatch(playerCardSelected, newCardSelection)) {
-                this.pickUpCards(playerCardSelected, newCardSelection);
+        const playerCard = this.state.cardSelection.find(card => card.isPlayerCard);
+        if (playerCard) {
+            const newCardSelection = [...cardSelection, { key: cardKey, isPlayerCard: false }];
+            const tableCardSelection = newCardSelection
+                .filter(card => !card.isPlayerCard)
+                .map(card => card.key);
+            if (this.cardSelectionsMatch(playerCard.key, tableCardSelection)) {
+                this.pickUpCards(playerCard.key, tableCardSelection);
             } else {
                 this.setState(state => ({
                     cardSelection: newCardSelection,
@@ -67,24 +74,22 @@ class CardContainer extends React.Component {
     }
 
     handlePlayerCardSelection = (cardKey) => {
-        const { tableCards } = this.state;
+        const { cardSelection } = this.state;
 
         this.getMatchingCardSets(cardKey)
             .then(result => {
                 if (result.length === 0) {
                     // Selected card can't pick up any other cards. It goes out of the hand and to the table
                     this.removeCardFromHand(cardKey);
-                    this.setState(state => ({
-                        tableCards: [...tableCards, { key: cardKey, isFlipped: true }],
-                    }));
                     emit.sendPlayerMove(cardKey, []);
                 } else if (result.length === 1) {
                     // Only one available move so player must take it
                     this.pickUpCards(cardKey, result[0].matches);
                 } else {
                     // There are multiple matching sets. Player must choose manually from the table cards
+                    let newCardSelection = [...cardSelection, { key: cardKey, isPlayerCard: true }];
                     this.setState(state => ({
-                        playerCardSelected: cardKey,
+                        cardSelection: newCardSelection,
                     }));
                 }
             })
@@ -112,92 +117,56 @@ class CardContainer extends React.Component {
         }
     };
 
-    cardSelectionsMatch = (playerCard, cardSelection) => {
-        const cardSelectionTotal = cardSelection
-            .map(card => getValueFromCardKey(card))
+    cardSelectionsMatch = (playerCardKey, tableCardSelectionKeys) => {
+        const tableCardTotalValue = tableCardSelectionKeys
+            .map(cardKey => getValueFromCardKey(cardKey))
             .reduce((pv, cv) => pv + cv, 0);
-        return playerCard && getValueFromCardKey(playerCard) === cardSelectionTotal;
+        return getValueFromCardKey(playerCardKey) === tableCardTotalValue;
     }
 
-    pickUpCards = (playerCard, cardSelection) => {
-        this.removeCardFromHand(playerCard);
-        this.removeCardsFromTable(cardSelection);
+    pickUpCards = (playerCardKey, tableCardSelectionKeys) => {
+        this.removeCardFromHand(playerCardKey);
         this.resetCardSelection();
-        emit.sendPlayerMove(playerCard, cardSelection);
+        emit.sendPlayerMove(playerCardKey, tableCardSelectionKeys);
 	}
 
     resetCardSelection = () => {
         this.setState(state => ({
-            playerCardSelected: '',
             cardSelection: [],
         }));
     }
 
-    removeCardFromHand = (playerCard) => {
+    removeCardFromHand = (cardKey) => {
         const { playerHand } = this.state;
         
         const newPlayerHand = playerHand.filter(function (card) {
-            return card.key !== playerCard;
+            return card.key !== cardKey;
         });
         this.setState(state => ({
             playerHand: newPlayerHand,
         }));
     }
 
-    removeCardsFromTable = (cardSelection) => {
-        const { tableCards } = this.state;
-
-        const newTableCards = tableCards.filter(function (card) {
-            return cardSelection.indexOf(card.key) < 0;
-        });
-        this.setState(state => ({
-            tableCards: newTableCards,
-        }));
-    }
-
-    renderLastPlayedCard = () => {
-        const { lastCardPlayed } = this.state;
-        if (lastCardPlayed) {
-            return (
-                <Card
-                    cardKey={lastCardPlayed}
-                />
-            );
-        } else {
-            return null;
-		}
-	}
-
     render() {
-        const { tableCards, playerHand, playerCardSelected } = this.state;
+        const { tableCards, playerHand, cardSelection } = this.state;
 
         return (
-            <div className="game-container">
-                <div className="table">
-                    <div className="game-left-panel">
-                        <CardDeck
-                            numCardsInDeck={6}
-                        />
-                        {this.renderLastPlayedCard()}
-                    </div>
-                    <div className="game-main-panel">
-                        <CardGrid
-                            type="table-cards"
-                            cards={tableCards}
-                            playerCardSelected={playerCardSelected}
-                            handleCardSelection={this.handleTableCardSelection}
-                            resetCardSelection={this.resetCardSelection}
-                        />
-                        <CardGrid
-                            type="player-cards"
-                            cards={playerHand}
-                            playerCardSelected={playerCardSelected}
-                            handleCardSelection={this.handlePlayerCardSelection}
-                            resetCardSelection={this.resetCardSelection}
-                        />
-                    </div>
-                </div>
-            </div>
+            <Row className="card-container">
+                <CardGrid
+                    type="table-cards"
+                    cards={tableCards}
+                    cardSelection={cardSelection}
+                    handleCardSelection={this.handleTableCardSelection}
+                    resetCardSelection={this.resetCardSelection}
+                />
+                <CardGrid
+                    type="player-cards"
+                    cards={playerHand}
+                    cardSelection={cardSelection}
+                    handleCardSelection={this.handlePlayerCardSelection}
+                    resetCardSelection={this.resetCardSelection}
+                />
+            </Row>
         );
     }
 }

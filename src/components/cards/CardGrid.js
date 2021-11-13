@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { motion, AnimatePresence } from "framer-motion";
-
 import './GameStyles.scss'
 import TableCard from './TableCard';
 import PlayerCard from './PlayerCard';
 
 const CardGrid = (props) => {
-    const { cards, type, playerCardSelected, handleCardSelection, resetCardSelection } = props;
+    const { cards, type, cardSelection, handleCardSelection, resetCardSelection } = props;
 
     const renderTableCards = (keys) => {
+        //TODO - move the AnimatePresence to the TableCard component - makes more sense there
         return (
             <AnimatePresence>
                 {keys.map((key, index) => (
@@ -18,12 +18,12 @@ const CardGrid = (props) => {
                         initial={false}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 1.5 }}
+                        transition={{ duration: 2 }}
                     >
                         <TableCard
-                            key={`card_${index}`}
+                            key={cards[key].key}
                             cardKey={cards[key].key}
-                            playerCardSelected={playerCardSelected}
+                            cardSelection={cardSelection}
                             handleCardSelection={handleCardSelection}
                             resetCardSelection={resetCardSelection}
                         />
@@ -37,9 +37,10 @@ const CardGrid = (props) => {
         return keys.map((key, index) => (
             <div className="player-card">
                 <PlayerCard
-                    key={`card_${index}`}
+                    key={cards[key].key}
                     cardKey={cards[key].key}
                     isFlipped={cards[key].isFlipped}
+                    cardSelection={cardSelection}
                     handleCardSelection={handleCardSelection}
                     resetCardSelection={resetCardSelection}
                 />
@@ -69,6 +70,7 @@ const CardGrid = (props) => {
 CardGrid.propTypes = {
     cards: PropTypes.array,
     type: PropTypes.string,
+    cardSelection: PropTypes.array,
     handleCardSelection: PropTypes.func,
     resetCardSelection: PropTypes.func,
 };

@@ -3,13 +3,13 @@ import Card from './Card';
 import CardSelector from './CardSelector';
 
 const TableCard = (props) => {
-    const { cardKey, playerCardSelected, handleCardSelection, resetCardSelection } = props;
+    const { cardKey, cardSelection, handleCardSelection, resetCardSelection } = props;
 
     return (
-        <div>
+        <div className='table-card'>
             <CardSelector
                 cardKey={cardKey}
-                isSelectable={playerCardSelected.length !== 0}
+                cardSelection={cardSelection}
                 handleCardSelection={handleCardSelection}
                 resetCardSelection={resetCardSelection}
             >
@@ -23,7 +23,7 @@ const TableCard = (props) => {
 
 TableCard.propTypes = {
     cardKey: PropTypes.string,
-    playerCardSelected: PropTypes.string,
+    cardSelection: PropTypes.array,
     handleCardSelection: PropTypes.func,
     resetCardSelection: PropTypes.func,
 };

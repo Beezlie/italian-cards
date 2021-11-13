@@ -7,8 +7,6 @@ import ROUTES, { RenderRoutes } from './routes';
 import { Nav } from './components';
 import background from './assets/images/background.jpg';
 
-import './App.css';
-
 export default class App extends React.Component {
     render() {
         return (
@@ -22,8 +20,8 @@ export default class App extends React.Component {
             >
                 <div className="App">
                     <Router>
-                        <Nav />
-                        <Container fluid="sm" className="p-0">
+                        <Nav className="vh-5"/>
+                        <Container fluid="true" className="vh-90">
                             <RenderRoutes routes={ROUTES} />
                         </Container>
                     </Router>

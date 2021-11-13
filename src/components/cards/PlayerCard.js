@@ -4,10 +4,10 @@ import Card from './Card';
 import CardSelector from './CardSelector';
 
 const PlayerCard = (props) => {
-    const { cardKey, isFlipped, handleCardSelection, resetCardSelection } = props;
+    const { cardKey, isFlipped, cardSelection, handleCardSelection, resetCardSelection } = props;
 
     return (
-        <div>
+        <div className="player-card">
             <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
                 <div>
                     <Card
@@ -16,7 +16,7 @@ const PlayerCard = (props) => {
                 </div>
                 <CardSelector
                     cardKey={cardKey}
-                    isSelectable={true}
+                    cardSelection={cardSelection}
                     handleCardSelection={handleCardSelection}
                     resetCardSelection={resetCardSelection}
                 >

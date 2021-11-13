@@ -9,9 +9,10 @@ import './CoreStyles.scss'
 import ChatContainer from '../chat/ChatContainer';
 import PlayerReadyButton from '../gameDetails/PlayerReadyButton';
 import CardContainer from '../cards/CardContainer';
+import CardDeck from '../cards/CardDeck';
 import ScoreModal from './ScoreModal';
 
-class Lobby extends React.Component {
+class Game extends React.Component {
 
     static contextTypes = { theme: PropTypes.object };
 
@@ -59,31 +60,34 @@ class Lobby extends React.Component {
         }
 
         return (
-            <Row className="lobby no-gutters">
-                <div className="left-panel">
+            <Row className="game no-gutters">
+                <ScoreModal />
+                <Col className="left-panel">
                     <PlayerReadyButton
                         username={username}
                     />
-                </div>
-                <div className="main-panel"
+                    <CardDeck
+                        numCardsInDeck={6}
+                    />
+                </Col>
+                <Col className="main-panel"
                     style={{
                         background: theme.useFluentDesign ? theme.acrylicTexture80.background : 'none'
                     }}
                 >
                     <CardContainer/>
-                </div>
-                <div className="right-panel">
+                </Col>
+                <Col className="right-panel">
                     <ChatContainer
                         username={username}
                     />
-                    <ScoreModal/>
-                </div>
+                </Col>
             </Row>
         );
     }
 }
 
-Lobby.propTypes = {
+Game.propTypes = {
     roomId: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
     options: PropTypes.object.isRequired,
@@ -99,4 +103,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(Lobby);
+export default connect(mapStateToProps)(Game);

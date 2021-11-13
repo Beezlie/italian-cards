@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 // import Cookies from 'js-cookie';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { reduxStore } from './index';
-import { Auth, Room, Lobby } from './components';
+import { Auth, Room, Game } from './components';
 
 const ROUTES = [
     { path: '/auth', key: 'AUTH', exact: true, component: Auth },
@@ -29,7 +29,7 @@ const ROUTES = [
                 path: '/room',
                 key: 'APP_ROOM',
                 exact: true,
-                component: Lobby
+                component: Game
             }
         ]
     }

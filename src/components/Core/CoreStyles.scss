@@ -1,28 +1,17 @@
-.lobby {
-    display: flex;
-    flex-direction: row;
+.game {
+    height: 90vh;
 }
 
-.left-panel {
-    height: 100%;
+.game .left-panel {
     flex: 0 0 15%;
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
 }
 
-.main-panel {
-    height: 100%;
-    flex: 0 0 65%;
-    display: flex;
-    flex-direction: column;
+.game .main-panel {
+    flex: 0 0 70%;
 }
 
-.right-panel {
-    height: 100%;
-    flex: 0 0 20%;
-    display: flex;
-    flex-direction: column;
+.game .right-panel {
+    flex: 0 0 15%;
 }
 
 .bottom-right-panel {
