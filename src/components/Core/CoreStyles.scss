@@ -2,23 +2,27 @@
     height: 90vh;
 }
 
-.game .left-panel {
-    flex: 0 0 15%;
-}
-
 .game .main-panel {
+    max-width: 70%;
     flex: 0 0 70%;
-}
-
-.game .right-panel {
-    flex: 0 0 15%;
-}
-
-.bottom-right-panel {
     display: flex;
-    flex-direction: row;
-    justify-content: end;
-    margin-right: 10px;
+    justify-content: center;
+}
+
+.game .main-panel .top-panel {
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.game .side-panel {
+    max-width: 15%;
+    flex: 0 0 15%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
 }
 
 .round-score {
@@ -26,4 +30,12 @@
     background-color: #FFFFFF;
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.player {
+    display: flex;
+    width: 5rem;
+    height: 7.5rem;
+    background-size: contain;
+    background-repeat: no-repeat;
 }

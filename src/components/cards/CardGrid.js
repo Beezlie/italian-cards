@@ -10,6 +10,7 @@ const CardGrid = (props) => {
 
     const renderTableCards = (keys) => {
         //TODO - move the AnimatePresence to the TableCard component - makes more sense there
+        //TODO - fix bug with AnimatePresence for scopa
         return (
             <AnimatePresence>
                 {keys.map((key, index) => (
@@ -18,7 +19,7 @@ const CardGrid = (props) => {
                         initial={false}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 2 }}
+                        transition={{ delay: 0.5, duration: 1 }}
                     >
                         <TableCard
                             key={cards[key].key}

@@ -11,6 +11,7 @@ import PlayerReadyButton from '../gameDetails/PlayerReadyButton';
 import CardContainer from '../cards/CardContainer';
 import CardDeck from '../cards/CardDeck';
 import ScoreModal from './ScoreModal';
+import Player from './Player';
 
 class Game extends React.Component {
 
@@ -50,9 +51,9 @@ class Game extends React.Component {
     };
 
     //TODO - use map state to props instead of passing username as prop
+    //TODO - this should be called from the lobby once all the users are ready so it should pass in the player list
     render() {
-        const { username, roomId, options } = this.props;
-        const { currentUsername, isTurn, warning } = this.state;
+        const { username, roomId, deckCount } = this.props;
         const { theme } = this.context;
 
         if (!roomId) {
@@ -62,22 +63,33 @@ class Game extends React.Component {
         return (
             <Row className="game no-gutters">
                 <ScoreModal />
-                <Col className="left-panel">
+                <Col className="side-panel">
                     <PlayerReadyButton
                         username={username}
                     />
+                    <Player
+                        username={username}
+                    />
                     <CardDeck
-                        numCardsInDeck={6}
+                        numCardsInDeck={deckCount}
                     />
                 </Col>
-                <Col className="main-panel"
-                    style={{
-                        background: theme.useFluentDesign ? theme.acrylicTexture80.background : 'none'
-                    }}
-                >
-                    <CardContainer/>
-                </Col>
-                <Col className="right-panel">
+                <Row className="main-panel">
+                    <div className="top-panel">
+                        <Player
+                            username={username}
+                        />
+                    </div>
+                    <CardContainer
+                        style={{
+                            background: theme.useFluentDesign ? theme.acrylicTexture80.background : 'none'
+                        }}
+                    />
+                </Row>
+                <Col className="side-panel">
+                    <Player
+                        username={username}
+                    />
                     <ChatContainer
                         username={username}
                     />
@@ -88,18 +100,21 @@ class Game extends React.Component {
 }
 
 Game.propTypes = {
+    username: PropTypes.string.isRequired,
     roomId: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
     options: PropTypes.object.isRequired,
+    deckCount: PropTypes.number
 }
 
 const mapStateToProps = state => {
-    const { user, room } = state;
+    const { user, room, game } = state;
     return {
         username: user.username,
         roomId: room.roomId,
         password: room.password,
-        options: room.options
+        options: room.options,
+        deckCount: game.deckCount
     };
 };
 

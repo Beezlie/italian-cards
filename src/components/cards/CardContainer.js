@@ -10,6 +10,7 @@ import { subscribeTo } from '../Socket/GameSubscriptions';
 import { emit } from '../Socket/GameEmitters';
 import { updateAfterTurn, startRound } from '../../store/actions/GameActions';
 import { restUrl } from '../../env';
+import ScopaAnimation from './ScopaAnimation';
 
 class CardContainer extends React.Component {
 
@@ -18,7 +19,7 @@ class CardContainer extends React.Component {
         this.state = {
             playerHand: [],
             tableCards: [],
-            cardSelection: [],
+            cardSelection: []
         };
         const { startRound, updateAfterTurn } = this.props;
 
@@ -152,6 +153,9 @@ class CardContainer extends React.Component {
 
         return (
             <Row className="card-container">
+                <ScopaAnimation
+                    tableCards={tableCards}
+                />
                 <CardGrid
                     type="table-cards"
                     cards={tableCards}

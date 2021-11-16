@@ -4,6 +4,7 @@ const DEFAULT_STATE = {
     gameStarted: false,
     isPlayerTurn: false,
     team: 0,
+    deckCount: 0,
 };
 
 const gameReducer = (state = DEFAULT_STATE, action) => {
@@ -27,6 +28,7 @@ const gameReducer = (state = DEFAULT_STATE, action) => {
             return {
                 ...state,
                 team: team,
+                deckCount: action.payload.deckCount,
                 isPlayerTurn: action.payload.isPlayerTurn,
                 teamScore: teamScore,
                 roundScore: roundScore,

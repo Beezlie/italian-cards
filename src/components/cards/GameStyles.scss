@@ -1,5 +1,4 @@
 .card-container {
-    height: 90vh;
     justify-content: left;
     align-items: flex-start;
 }
@@ -10,15 +9,17 @@
 }
 
 .card-container .main-panel {
-    height: 90vh;
+    
 }
 
 .deck {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 3px;
-    align-self: flex-end;
-    margin-bottom: 5px;
+    position: relative;
+    margin-top: 2rem;
+    margin-right: 2rem;
+}
+
+.deck-card {
+    position: absolute;
 }
 
 .table-cards {

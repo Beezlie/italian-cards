@@ -9,8 +9,13 @@ const CardDeck = (props) => {
 
     var cards = [];
     for (let i = 0; i < numCardsInDeck; i++) {
+        const style = {
+            top: i/2,
+            left: i/2,
+            zIndex: i,
+		}
         cards.push(
-            <div className="deck-card" key={`deck_card_${i}`}>
+            <div key={`deck_card_${i}`} className="deck-card" style={style}>
                 <Card
                     cardKey={"back"}
                 />
