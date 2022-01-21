@@ -30,7 +30,7 @@
     "sass": "^1.42.1",
     "shortid": "^2.2.16",
     "socket.io-client": "^4.2.0",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
