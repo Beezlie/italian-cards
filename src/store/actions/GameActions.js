@@ -3,6 +3,11 @@ export const startRound = data => ({
     payload: data
 });
 
+export const dealCards = data => ({
+    type: 'DEAL_CARDS',
+    payload: data
+});
+
 export const endGame = () => ({
     type: 'END_GAME',
 });

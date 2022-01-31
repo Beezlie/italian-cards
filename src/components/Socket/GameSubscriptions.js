@@ -33,6 +33,13 @@ export const subscribeTo = {
         });
     },
 
+    dealCards: cb => {
+        socket.on('deal-cards', data => {
+            console.log(data);
+            cb(null, data);
+        });
+    },
+
     updateAfterTurn: cb => {
         socket.on('update-after-turn', data => {
             console.log(data);

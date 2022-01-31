@@ -8,7 +8,7 @@ import CardGrid from './CardGrid';
 import { getValueFromCardKey } from './CardUtil';
 import { subscribeTo } from '../Socket/GameSubscriptions';
 import { emit } from '../Socket/GameEmitters';
-import { updateAfterTurn, startRound } from '../../store/actions/GameActions';
+import { updateAfterTurn, startRound, dealCards } from '../../store/actions/GameActions';
 import { restUrl } from '../../env';
 import ScopaAnimation from './ScopaAnimation';
 
@@ -21,9 +21,14 @@ class CardContainer extends React.Component {
             tableCards: [],
             cardSelection: []
         };
-        const { startRound, updateAfterTurn } = this.props;
+        const { startRound, dealCards, updateAfterTurn } = this.props;
 
+        //TODO - is this needed? Where does this belong
         subscribeTo.startRound((err, data) => {
+            startRound(data);
+        });
+
+        subscribeTo.dealCards((err, data) => {
             const initTableCards = data.tableCards.map(function (cardKey) {
                 return { key: cardKey, isFlipped: true }
             });
@@ -34,7 +39,7 @@ class CardContainer extends React.Component {
                 tableCards: initTableCards,
                 playerHand: initPlayerHand,
             }));
-            startRound(data);
+            dealCards(data);
         });
 
         subscribeTo.updateAfterTurn((err, data) => {
@@ -177,6 +182,7 @@ class CardContainer extends React.Component {
 
 CardContainer.propTypes = {
     startRound: PropTypes.func,
+    dealCards: PropTypes.func,
     updateAfterTurn: PropTypes.func,
 };
 
@@ -186,6 +192,7 @@ const mapStateToProps = (state = {}) => {
 
 const mapDispatchToProps = dispatch => ({
     startRound: data => dispatch(startRound(data)),
+    dealCards: data => dispatch(dealCards(data)),
     updateAfterTurn: data => dispatch(updateAfterTurn(data))
 });
 

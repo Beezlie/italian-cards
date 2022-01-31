@@ -35,6 +35,12 @@ const gameReducer = (state = DEFAULT_STATE, action) => {
                 gameStarted: true,
             };
         }
+        case 'DEAL_CARDS': {
+            return {
+                ...state,
+                deckCount: action.payload.deckCount,
+            };
+        }
         case 'END_GAME': {
             return { ...state, gameStarted: false };
         }
