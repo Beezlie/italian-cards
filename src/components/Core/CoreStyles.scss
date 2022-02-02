@@ -21,6 +21,7 @@
     flex: 0 0 15%;
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
     align-content: center;
 }
@@ -35,7 +36,7 @@
 .player {
     display: flex;
     width: 5rem;
-    height: 7.5rem;
+    height: 5rem;
     background-size: contain;
     background-repeat: no-repeat;
 }

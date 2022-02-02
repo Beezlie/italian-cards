@@ -10,21 +10,26 @@ const CardDeck = (props) => {
     var cards = [];
     for (let i = 0; i < numCardsInDeck; i++) {
         const style = {
-            top: i/2,
-            left: i/2,
+            top: i / 2,
+            left: i / 2,
             zIndex: i,
 		}
         cards.push(
-            <div key={`deck_card_${i}`} className="deck-card" style={style}>
+            <div key={`deck_card_${i}`} className='deck-card' style={style}>
+                {i === numCardsInDeck - 1 &&
+                    <div className='deck-count-overlay' style={{zIndex:numCardsInDeck}}> 
+                        {numCardsInDeck}
+                    </div>
+                }
                 <Card
-                    cardKey={"back"}
-                />
+                    cardKey={'back'}
+                />           
             </div>
         );
     }
 
     return (
-        <div className="deck">
+        <div className='deck'>
             {cards}
         </div>
     );
