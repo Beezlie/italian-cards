@@ -6,6 +6,7 @@ import Button from 'react-uwp/Button';
 // TODO: Add Successfull creation of room authSuccess -> true
 export default class Create extends React.Component {
     state = {
+        action: 'create',
         roomId: '',
         password: '',
         options: {
@@ -49,8 +50,8 @@ export default class Create extends React.Component {
     handleSubmit = event => {
         event.preventDefault();
         const { changeAuth } = this.props;
-        const { roomId, password, options } = this.state;
-        changeAuth({ roomId, password, options });
+        const { roomId, password, action, options } = this.state;
+        changeAuth({ roomId, password, action, options });
     };
 
     getNewRoomId = () => {

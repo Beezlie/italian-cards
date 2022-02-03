@@ -5,6 +5,7 @@ import Button from 'react-uwp/Button';
 
 export default class JoinRoom extends React.Component {
     state = {
+        action: 'join',
         roomId: '',
         password: ''
     };
@@ -31,9 +32,9 @@ export default class JoinRoom extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        const { roomId, password } = this.state;
+        const { roomId, password, action } = this.state;
         const { changeAuth } = this.props;
-        changeAuth({ roomId, password });
+        changeAuth({ roomId, password, action });
     };
 
     render() {

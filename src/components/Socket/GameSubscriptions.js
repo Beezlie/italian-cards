@@ -1,4 +1,4 @@
-import { socket } from '../Room/Room';
+import { socket } from '../Room/RoomLauncher';
 
 export const subscribeTo = {
     showPlayers: cb => {

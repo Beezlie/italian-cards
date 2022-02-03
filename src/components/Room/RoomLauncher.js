@@ -3,12 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
-import HyperLink from 'react-uwp/HyperLink';
 
 import ErrorHandler from '../ErrorHandler';
-import Welcome from './Room.Welcome';
-import JoinRoom from './Room.Join';
-import CreateRoom from './Room.Create';
+import JoinRoom from './JoinRoom';
+import CreateRoom from './CreateRoom';
 import { SocketInit } from '../Socket/Socket';
 import { initListeners } from '../Socket/InitListeners';
 import { addRoomId, addPassword, addOptions } from '../../store/actions/RoomActions';
@@ -16,9 +14,8 @@ import { emit } from '../Socket/GameEmitters';
 
 export let socket = undefined;
 
-class Room extends React.Component {
+class RoomLauncher extends React.Component {
     state = {
-        action: 'join',
         error: ''
     };
 
@@ -29,8 +26,7 @@ class Room extends React.Component {
 
     handleAuth = data => {
         const { username } = this.props;
-        const { action } = this.state;
-        const { roomId, password, options } = data;
+        const { roomId, password, action, options } = data;
         // options -> only when action === 'create'
         socket = SocketInit(username, roomId, password, action, options);
         initListeners(this, socket);
@@ -41,7 +37,7 @@ class Room extends React.Component {
     };
 
     render() {
-        const { action, error } = this.state;
+        const { error } = this.state;
         const { roomId } = this.props;
 
         if (error) {
@@ -52,31 +48,22 @@ class Room extends React.Component {
         if (!roomId) {
             return (
                 <div className="p-3">
-                    <Welcome />
-                    <hr />
                     <Row>
-                        <Col>{action === 'join' && <JoinRoom changeAuth={this.handleAuth} />}</Col>
                         <Col>
-                            {action === 'create' && <CreateRoom changeAuth={this.handleAuth} />}
+                            <JoinRoom changeAuth={this.handleAuth} />
+                        </Col>
+                        <Col>
+                            <CreateRoom changeAuth={this.handleAuth} />
                         </Col>
                     </Row>
                     <br />
-                    <HyperLink
-                        onClick={() => {
-                            this.setState(prevState => ({
-                                action: prevState.action === 'join' ? 'create' : 'join'
-                            }));
-                        }}
-                    >
-                        {`${action === 'join' ? 'Create New' : 'Join'} Room`}
-                    </HyperLink>
                 </div>
             );
         }
 
         return (
             <Redirect
-                push
+                push 
                 to={{
                     pathname: '/room',
                     search: `?=${roomId}`,
@@ -103,4 +90,4 @@ const mapDispatchToProps = dispatch => ({
     addOptions: options => dispatch(addOptions({ options }))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Room);
+export default connect(mapStateToProps, mapDispatchToProps)(RoomLauncher);

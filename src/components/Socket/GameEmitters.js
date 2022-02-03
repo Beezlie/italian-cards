@@ -1,4 +1,4 @@
-import { socket } from '../Room/Room';
+import { socket } from '../Room/RoomLauncher';
 
 export const emit = {
     sendChatMessage: (message) => {
