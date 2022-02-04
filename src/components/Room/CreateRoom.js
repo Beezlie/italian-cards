@@ -78,7 +78,7 @@ export default class Create extends React.Component {
                             aria-describedby="text"
                         />
                     </InputGroup>
-                    <br />
+                    <br/>
                     <h6>Add password to keep it exclusive</h6>
                     <InputGroup>
                         <FormControl
@@ -92,40 +92,7 @@ export default class Create extends React.Component {
                             onChange={this.handleDataChange}
                         />
                     </InputGroup>
-                    <br />
-                    <br />
-                    <h4>Game Settings</h4>
-                    <br />
-                    <h6>Max Time per chance </h6>
-                    <InputGroup>
-                        <FormControl
-                            type="number"
-                            placeholder="Default: 120"
-                            name="max-timer-limit"
-                            aria-label="max-timer-limit"
-                            aria-describedby="max-timer-limit"
-                            onChange={this.handleDataChange}
-                        />
-                        <InputGroup.Append>
-                            <InputGroup.Text id="time-prefiz">seconds</InputGroup.Text>
-                        </InputGroup.Append>
-                    </InputGroup>
-                    <br />
-                    <h6>Max Players Per Team</h6>
-                    <InputGroup>
-                        <FormControl
-                            type="number"
-                            placeholder="Default: 14"
-                            name="max-players-limit"
-                            aria-label="max-players-limit"
-                            aria-describedby="max-players-limit"
-                            onChange={this.handleDataChange}
-                        />
-                        <InputGroup.Append>
-                            <InputGroup.Text id="players-prefix">players</InputGroup.Text>
-                        </InputGroup.Append>
-                    </InputGroup>
-                    <br />
+                    <br/>
                     <InputGroup>
                         <InputGroup.Append>
                             <Button variant="light" type="submit">

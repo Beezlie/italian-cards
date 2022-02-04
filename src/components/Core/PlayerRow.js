@@ -4,7 +4,7 @@ import Button from 'react-uwp/Button';
 import Player from './Player';
 
 const PlayerRow = (props) => {
-    const { userName, isReady, handlePlayerReady } = props;
+    const { username, isReady, handlePlayerReady } = props;
 
     return (
         <div className='player-row'>
@@ -13,14 +13,14 @@ const PlayerRow = (props) => {
                 {isReady ? 'Ready' : 'Ready?'}
             </Button>
             <div>
-                {userName}
+                {username}
             </div>
         </div>
     );
 };
 
 Player.propTypes = {
-    userName: PropTypes.string,
+    username: PropTypes.string,
     isReady: PropTypes.bool,
     handlePlayerReady: PropTypes.func,
 };
