@@ -1,7 +1,6 @@
 const DEFAULT_STATE = {
     roundScore: [],
     teamScore: [],
-    gameStarted: false,
     isPlayerTurn: false,
     team: 0,
     deckCount: 0,
@@ -32,7 +31,6 @@ const gameReducer = (state = DEFAULT_STATE, action) => {
                 isPlayerTurn: action.payload.isPlayerTurn,
                 teamScore: teamScore,
                 roundScore: roundScore,
-                gameStarted: true,
             };
         }
         case 'DEAL_CARDS': {
@@ -40,9 +38,6 @@ const gameReducer = (state = DEFAULT_STATE, action) => {
                 ...state,
                 deckCount: action.payload.deckCount,
             };
-        }
-        case 'END_GAME': {
-            return { ...state, gameStarted: false };
         }
         default:
             return state;

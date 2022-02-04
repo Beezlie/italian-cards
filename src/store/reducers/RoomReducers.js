@@ -1,6 +1,7 @@
 const DEFAULT_STATE = {
     roomId: '',
     password: '',
+    gameStarted: false,
     options: {}
 };
 
@@ -20,6 +21,10 @@ const roomReducer = (state = DEFAULT_STATE, action) => {
         case 'ADD_OPTIONS': {
             const options = action.payload.options;
             return { ...state, options };
+        }
+        case 'UPDATE_ROOM': {
+            const gameStarted = action.payload.gameStarted;
+            return { ...state, gameStarted };
         }
         default:
             return state;

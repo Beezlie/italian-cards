@@ -25,8 +25,9 @@ const ScoreModal = (props) => {
         return rows;
     }
 
+    //TODO - remove team as a condition here - it's only temporary
     const getRoundScoreTable = () => {
-        if (gameStarted) {
+        if (shouldDisplayScore()) {
             return (
                 <table className='round-score'>
                     <thead>
@@ -50,8 +51,12 @@ const ScoreModal = (props) => {
         }
     }
 
+    const shouldDisplayScore = () => {
+        return gameStarted && teamScore.length;
+    }
+
     useEffect(() => {
-        if (gameStarted) {
+        if (shouldDisplayScore()) {
             setShow(true);
         }
     }, [roundScore, gameStarted]);
@@ -71,12 +76,12 @@ ScoreModal.propTypes = {
 };
 
 const mapStateToProps = function (state) {
-    const { game } = state;
+    const { game, room } = state;
     return {
         teamScore: game.teamScore,
         roundScore: game.roundScore,
         team: game.team,
-        gameStarted: game.gameStarted,
+        gameStarted: room.gameStarted,
     };
 };
 

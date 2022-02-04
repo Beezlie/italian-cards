@@ -28,9 +28,9 @@ ScopaAnimation.propTypes = {
 };
 
 const mapStateToProps = function (state) {
-    const { game } = state;
+    const { room } = state;
     return {
-        gameStarted: game.gameStarted,
+        gameStarted: room.gameStarted,
     };
 };
 

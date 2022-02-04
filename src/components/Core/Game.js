@@ -7,7 +7,6 @@ import Toast from 'react-uwp/Toast';
 
 import './CoreStyles.scss'
 import ChatContainer from '../chat/ChatContainer';
-import PlayerReadyButton from '../gameDetails/PlayerReadyButton';
 import CardContainer from '../cards/CardContainer';
 import CardDeck from '../cards/CardDeck';
 import ScoreModal from './ScoreModal';
@@ -64,9 +63,6 @@ class Game extends React.Component {
             <Row className="game no-gutters">
                 <ScoreModal />
                 <Col className="side-panel">
-                    <PlayerReadyButton
-                        username={username}
-                    />
                     <Player
                         username={username}
                     />

@@ -16,3 +16,8 @@ export const addOptions = options => ({
     type: 'ADD_OPTIONS',
     payload: options
 });
+
+export const updateRoom = data => ({
+    type: 'UPDATE_ROOM',
+    payload: data
+});

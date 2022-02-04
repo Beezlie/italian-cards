@@ -9,6 +9,13 @@ export const emit = {
         socket.emit('player-ready', username);
     },
 
+    startGame: (options) => {
+        const data = {
+            options: options,
+        }
+        socket.emit('start-game', data);
+    },
+
     sendPlayerMove: (playerCardKey, cardSelectionKeys) => {
         const data = {
             playerCard: playerCardKey,
