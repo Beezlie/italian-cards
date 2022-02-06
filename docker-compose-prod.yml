@@ -1,0 +1,69 @@
+version: '3.8'
+services:
+
+  nginx:
+    image: nginx
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - "3050:80"
+
+  api:
+    image: beezlie/api
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: "./server"
+    ports:
+      - '8080:8080'
+    networks:
+      - app-network
+
+  client:
+    image: beezlie/client
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: "./client"
+    ports:
+      - '3000:3000'
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis-vol:/var/lib/redis
+    restart: on-failure
+    ports:
+      - '6379:6379'
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MONGO_INITDB_DATABASE=italian-cards-db
+    volumes:
+      - mongo-vol:/data/db
+    restart: on-failure
+    ports:
+      - '27017:27017'
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis-vol: {}
+  mongo-vol:
+    driver: local

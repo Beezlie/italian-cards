@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\components",
+    "\\src\\components\\cards",
+    "\\src\\components\\gameDetails",
+    "\\src\\components\\Room",
+    "\\src\\components\\Socket",
+    "\\src\\store",
+    "\\src\\store\\actions",
+    "\\src\\store\\reducers"
+  ],
+  "SelectedNode": "\\src\\components\\cards\\CardContainer.js",
+  "PreviewInSolutionExplorer": false
+}
